@@ -4,12 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 interface IUser {
   id: string;
   email: string;
-  role: string;
+  role: "ADMIN" | "USER" | string;
 }
 
-const roleBasedRoutes = ["/", "/admin/dashboard", "/user/dashboard"];
+const roleBasedRoutes: Record<string, string[]> = {
+  "/admin": ["ADMIN"],
+  "/user": ["USER", "ADMIN"],
+};
 
-const authRoutes = [
+const publicRoutes = [
   "/login",
   "/register",
   "/forgot-password",
@@ -18,37 +21,56 @@ const authRoutes = [
 
 export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("token")?.value;
-  const refreshToken = request.cookies.get("refreshToken")?.value;
-  console.log("accessToken", accessToken, "refreshToken", refreshToken);
-
   const { pathname } = request.nextUrl;
 
-  if (!accessToken && !refreshToken && !authRoutes.includes(pathname)) {
+  let user: IUser | null = null;
+
+  if (!accessToken) {
+    if (publicRoutes.includes(pathname)) {
+      return NextResponse.next();
+    }
     return NextResponse.redirect(
       new URL(`/login?redirect=${pathname}`, request.url),
     );
   }
 
-  let user: IUser | null = null;
+  // 2. Token decode
+  try {
+    user = decodeJwt(accessToken) as IUser;
+  } catch {
+    return NextResponse.redirect(
+      new URL(`/login?redirect=${pathname}`, request.url),
+    );
+  }
 
-  if (accessToken) {
-    try {
-      user = decodeJwt(accessToken);
-      console.log({ proxyts: user });
-    } catch (error) {
-      console.log("error", error);
-      return NextResponse.redirect(
-        new URL(`/login?redirect=${pathname}`, request.url),
-      );
+  if (user && publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // 4. Role-based route check
+  if (user) {
+    const matchedRouteKey = Object.keys(roleBasedRoutes).find((route) =>
+      pathname.startsWith(route),
+    );
+
+    if (matchedRouteKey) {
+      const allowedRoles = roleBasedRoutes[matchedRouteKey];
+
+      const userRole = user.role?.toUpperCase();
+      if (!allowedRoles.includes(userRole)) {
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
+      }
     }
   }
 
-  return NextResponse.redirect(new URL("/home", request.url));
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    "/about/:path*",
+    "/",
+    "/admin/:path*",
+    "/user/:path*",
     "/login",
     "/register",
     "/forgot-password",
