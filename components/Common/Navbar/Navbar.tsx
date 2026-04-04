@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,9 +18,9 @@ export default function Navbar() {
 
   const navItems = [
     { label: "Home", href: "/" },
-    { label: "Events", href: "/events" },
-    { label: "Member Directory", href: "/member-directory" },
-    { label: "Membership", href: "/membership" },
+    { label: "Features", href: "/features" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "How it works", href: "/how-works" },
   ];
 
   useEffect(() => {
@@ -58,20 +58,20 @@ export default function Navbar() {
   };
 
   return (
-    <div className="bg-linear-to-b from-[#dff98d] mb-6 to-[#f1fdcb]">
+    <div className="mb-6 ">
       <nav
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-40 transition-all  duration-300 ${
           isScrolled
-            ? "bg-[#dff98d]/80 backdrop-blur-md border-b shadow-sm"
-            : "bg-[#f1fdcb]/70 backdrop-blur-sm"
+            ? "bg-[#fffff] backdrop-blur-md border-b shadow-sm"
+            : "bg-[#f7f9fb] backdrop-blur-sm"
         }`}
       >
-        <div className="mx-auto flex items-center justify-between py-3 px-4 lg:px-6 max-w-7xl">
-          <div className="hidden lg:flex items-center gap-32 bg-white rounded-4xl py-2 px-16">
+        <div className="container mx-auto  px-4 lg:px-6 ">
+          <div className="hidden lg:flex justify-between items-center gap-32 rounded-4xl py-2 px-16">
             <div className="shrink-0 transition-transform duration-200 hover:scale-105">
               <Link href="/">
                 <Image
-                  src="/bpc_logo.png"
+                  src="/r_logo.png"
                   alt="Logo"
                   width={100}
                   height={100}
@@ -96,9 +96,22 @@ export default function Navbar() {
               ))}
             </div>
             <div className="hidden lg:block">
-              <Button variant="default" className="gap-2 py-6">
-                Become a Member
-              </Button>
+              <div className="flex justify-between items-center gap-4">
+                <Link href="/login">
+                  <Button className="bg-white text-black hover:bg-white/90 gap-2 py-6 flex items-center">
+                    Login
+                  </Button>
+                </Link>
+
+                <Link href="/register">
+                  <Button
+                    variant="default"
+                    className="gap-2 py-6 flex items-center px-10"
+                  >
+                    Get started <ArrowUpRight size={18} strokeWidth={2.5} />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -162,7 +175,7 @@ export default function Navbar() {
             variant="default"
             className="w-full gap-2 py-5 bg-[#d99b35] hover:bg-[#c7871f] text-lg font-semibold"
           >
-            Become a Member
+            Get started
           </Button>
         </div>
       </div>

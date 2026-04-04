@@ -12,7 +12,7 @@ if (!baseUrl) {
 const baseQueryWithAuth: ReturnType<typeof fetchBaseQuery> = async (
   args,
   api,
-  extraOptions
+  extraOptions,
 ) => {
   const rawBaseQuery = fetchBaseQuery({
     baseUrl,
