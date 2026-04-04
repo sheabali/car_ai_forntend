@@ -253,7 +253,7 @@ export default function RegistrationForm() {
           />
         </div>
 
-        <div className="w-full  bg-white rounded-3xl shadow-lg p-8">
+        <div className="w-full bg-white rounded-3xl shadow-lg p-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Join Our Club
