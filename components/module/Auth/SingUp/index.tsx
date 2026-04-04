@@ -242,18 +242,18 @@ export default function RegistrationForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8 items-center">
-        <div className="w-full md:w-1/2 bg-[#0a1628] rounded-3xl p-12 flex items-center justify-center lg:min-h-200">
+      <div className="w-full max-w-7xl flex flex-col md:flex-row gap-8 items-center">
+        <div className="w-full rounded-3xl p-12 flex items-center justify-center lg:min-h-200">
           <Image
-            src="/bpc_logo.png"
+            src="/images/otp.jpg"
             alt="Tennis"
             className="w-full h-full object-cover"
-            width={500}
-            height={500}
+            width={1000}
+            height={1000}
           />
         </div>
 
-        <div className="w-full md:w-1/2 bg-white rounded-3xl shadow-lg p-8">
+        <div className="w-full  bg-white rounded-3xl shadow-lg p-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-2">
               Join Our Club

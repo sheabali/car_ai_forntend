@@ -22,7 +22,7 @@ type LoginFormValues = {
   password: string;
 };
 interface CustomJwtPayload extends JwtPayload {
-  role: string; // Add the role property here
+  role: string;
 }
 
 const schema = z.object({
@@ -74,13 +74,13 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="flex w-full max-w-6xl items-center gap-28 px-4">
-        <div className="hidden md:flex flex-1 items-center justify-center bg-[#0c1421] rounded-lg min-h-[90vh]">
+        <div className="hidden md:flex flex-1 items-center justify-center rounded-lg min-h-[90vh]">
           <Image
-            src="/bpc_logo.png"
-            alt="BPC Logo"
-            width={420}
-            height={420}
-            className="object-contain"
+            src="/images/otp.jpg"
+            alt="Logo"
+            width={800}
+            height={800}
+            className="object-cover rounded-lg"
             priority
           />
         </div>
@@ -88,16 +88,16 @@ const LoginPage = () => {
         <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
           <Link href="/">
             <Image
-              src="/bpc_logo.png"
-              alt="BPC Logo"
-              width={150}
+              src="/Logo.png"
+              alt="Logo"
+              width={50}
               height={50}
               className="mx-auto mb-4 rounded-2xl"
             />
           </Link>
           <h1 className="text-center text-2xl font-semibold">Welcome Back</h1>
           <p className="mb-6 mt-3 text-center text-sm text-gray-600">
-            Sign in to your Tennis Club account
+            Sign in to your account
           </p>
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
