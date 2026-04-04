@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
-import { ArrowDown, Route } from "lucide-react";
+import { MoveDown, Route } from "lucide-react";
 
 const SmartCard = () => {
   return (
-    <Card className="p-8 border-0 shadow-sm bg-card">
+    <Card className="p-8 bg-[#f9f9f9] border-0 shadow-sm">
       <div className="flex items-center gap-3 mb-4">
         <Route className="w-6 h-6 text-primary" />
         <h2 className="text-2xl font-bold text-foreground">
@@ -18,24 +18,23 @@ const SmartCard = () => {
 
       <div className="space-y-6 relative">
         {/* Flow diagram */}
-        <div className="flex flex-col items-center">
-          <div className="text-center mb-4">
-            <p className="text-sm font-medium text-foreground">User Input</p>
+        <div className="flex flex-col bg-white py-5 rounded-2xl items-center">
+          <div className="text-center ">
+            <p className="text-sm text-primary font-semibold">User Input</p>
           </div>
-          <ArrowDown className="w-5 h-5 text-primary mb-4" />
+        </div>
+        <div className="flex justify-center">
+          <MoveDown className="w-5 h-5 text-center text-primary " />
         </div>
 
-        <div className="flex flex-col items-center">
-          <div className="bg-primary/10 rounded-lg px-4 py-3 text-center mb-4">
-            <p className="text-sm font-semibold text-primary">AI Diagnostics</p>
-          </div>
-          <ArrowDown className="w-5 h-5 text-primary mb-4" />
+        <div className="flex flex-col bg-white py-5 rounded-2xl items-center">
+          <p className="text-sm text-primary font-semibold">AI Diagnostics</p>
         </div>
-
-        <div className="text-center">
-          <p className="text-sm font-medium text-foreground">
-            Specialist Output
-          </p>
+        <div className="flex justify-center">
+          <MoveDown className="w-5 h-5 text-center text-primary" />
+        </div>
+        <div className="flex flex-col bg-white py-5 rounded-2xl items-center">
+          <p className="text-sm text-primary font-semibold">AI Diagnostics</p>
         </div>
       </div>
     </Card>

@@ -9,10 +9,10 @@ import { useState } from "react";
 export default function HeroSection() {
   const diagnose = [
     "Problems Faster with AI",
-    "Step by Step Guidance",
-    "Troubleshooting",
+    "Step by Step Guidance AI",
+    "Troubleshooting AI",
     "AI-Powered Speed",
-    "Smart Troubleshooting",
+    "Smart Troubleshooting AI",
   ];
   const [input, setInput] = useState("");
   const [activeTab, setActiveTab] = useState("diagnosis");

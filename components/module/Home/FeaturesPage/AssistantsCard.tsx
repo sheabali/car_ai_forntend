@@ -3,7 +3,7 @@ import { ArrowUp, MessageCircle, Search } from "lucide-react";
 
 const AssistantsCard = () => {
   return (
-    <Card className="p-8 border-0 shadow-sm bg-card">
+    <Card className="w-full p-8 border-0 shadow-sm bg-[#f9f9f9]">
       <div className="flex items-center gap-3 mb-4">
         <MessageCircle className="w-6 h-6 text-primary" />
         <h2 className="text-2xl font-bold text-foreground">
