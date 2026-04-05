@@ -3,7 +3,7 @@ import { FileText } from "lucide-react";
 
 const SessionCard = () => {
   return (
-    <Card className="p-8 border-0 shadow-sm bg-card">
+    <Card className="p-8 border-0 shadow-sm bg-[#f9f9f9]">
       <div className="flex items-center gap-3 mb-4">
         <FileText className="w-6 h-6 text-primary" />
         <h2 className="text-2xl font-bold text-foreground">
@@ -27,7 +27,7 @@ const SessionCard = () => {
               misfire
             </p>
             <p className="text-muted-foreground">
-              <span className="font-medium text-foreground">Status:</span>{" "}
+              <span className="font-medium text-foreground">Status:</span>
               Completed
             </p>
             <p className="text-muted-foreground">
