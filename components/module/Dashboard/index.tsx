@@ -21,6 +21,7 @@ import {
   Store,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const adminNavItems = [
@@ -57,6 +58,8 @@ export default function AppHeader({
   onLogout,
   onNavigate,
 }: AppHeaderProps) {
+  const router = useRouter();
+
   const navItems =
     role === "ADMIN" ? adminNavItems : role === "USER" ? userNavItems : [];
 
@@ -64,6 +67,7 @@ export default function AppHeader({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleNavigate = (url: string) => {
+    router.push(url);
     setActivePath(url);
     onNavigate?.(url);
     setMobileOpen(false);
