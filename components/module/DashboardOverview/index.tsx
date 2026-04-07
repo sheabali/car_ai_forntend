@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import MetricCard from "@/components/shared/MetricCardDashboard";
 import { Baby, UserCheck, Users } from "lucide-react";
 import ActiveUsersChart from "./ActiveUsersChart";
