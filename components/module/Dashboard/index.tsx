@@ -27,7 +27,11 @@ import { useState } from "react";
 const adminNavItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
   { title: "Shop & User Management", url: "/admin/shop", icon: Store },
-  { title: "Subscription & Billing", url: "/admin/billing", icon: CreditCard },
+  {
+    title: "Subscription & Billing",
+    url: "/admin/subscription",
+    icon: CreditCard,
+  },
 ];
 
 const userNavItems = [
