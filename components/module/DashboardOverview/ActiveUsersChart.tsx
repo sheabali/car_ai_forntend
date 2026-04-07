@@ -1,0 +1,127 @@
+"use client";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+const chartData = [
+  { day: "Sun", users: 20 },
+  { day: "Mon", users: 58 },
+  { day: "Tue", users: 40 },
+  { day: "Wed", users: 20 },
+  { day: "Thu", users: 80 },
+  { day: "Fri", users: 20 },
+  { day: "Sat", users: 20 },
+];
+
+const timeRanges = [
+  { label: "This Week", value: "week" },
+  { label: "This Month", value: "month" },
+  { label: "This Year", value: "year" },
+];
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    value: number;
+    payload: { day: string };
+  }>;
+}
+
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+    return (
+      <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
+        <p className="text-sm font-semibold text-slate-900">
+          {data.payload.day}
+        </p>
+        <p className="text-sm font-bold text-blue-600">{data.value} Users</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+export default function ActiveUsersChart() {
+  const [timeRange, setTimeRange] = useState("week");
+
+  const maxValue = Math.max(...chartData.map((d) => d.users));
+  const highlightDay = "Thu";
+
+  return (
+    <Card className="w-full border-0 bg-white">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
+        <CardTitle className="text-md font-semibold text-slate-900">
+          Active Users
+        </CardTitle>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="w-32">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {timeRanges.map((range) => (
+              <SelectItem key={range.value} value={range.value}>
+                {range.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <ResponsiveContainer width="100%" height={350}>
+          <BarChart
+            data={chartData}
+            margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#e2e8f0"
+              vertical={false}
+            />
+            <XAxis
+              dataKey="day"
+              tick={{ fill: "#64748b", fontSize: 12 }}
+              axisLine={{ stroke: "#e2e8f0" }}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: "#64748b", fontSize: 12 }}
+              axisLine={{ stroke: "#e2e8f0" }}
+              tickLine={false}
+              domain={[0, 100]}
+            />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: "rgba(0,0,0,0)" }}
+            />
+            <Bar dataKey="users" radius={[8, 8, 0, 0]} isAnimationActive>
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={entry.day === highlightDay ? "#1e3a8a" : "#c7d2fe"}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
+  );
+}
