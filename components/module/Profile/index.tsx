@@ -1,62 +1,41 @@
-import CustomersTable from "../DashboardOverview/UserTable";
 import RecentBilling from "./RecentBilling";
+import UserCard from "./UserCard";
 
 const AdminProfile = () => {
-  const recentCompletedJobs = [
+  const recentBilling = [
     {
-      id: "1",
-      parentName: "John Doe",
-      parentImage: "/boy.png",
-      caregiverName: "Toyota",
-      caregiverImage: "/boy.png",
-      date: "2023-06-01",
-      incident: "Paid",
-      technicians: 5,
+      orderID: "INV-1024",
+      shopOwner: { name: "Ronald Richardson", email: "ronald.r@gmail.com" },
+      plan: "Basic Shop Plan",
+      amount: 79,
+      date: "2026-03-01",
     },
     {
-      id: "2",
-      parentName: "Jane Smith",
-      parentImage: "/boy.png",
-      caregiverName: "Honda",
-      caregiverImage: "/boy.png",
-      date: "2023-06-02",
-      incident: "Paid",
-      technicians: 3,
+      orderID: "INV-1023",
+      shopOwner: { name: "Ronald Richardson", email: "ronald.r@gmail.com" },
+      plan: "Professional Shop Plan",
+      amount: 129,
+      date: "2026-02-01",
     },
     {
-      id: "2",
-      parentName: "Jane Smith",
-      parentImage: "/boy.png",
-      caregiverName: "Honda",
-      caregiverImage: "/boy.png",
-      date: "2023-06-02",
-      incident: "Paid",
-      technicians: 3,
-    },
-    {
-      id: "2",
-      parentName: "Jane Smith",
-      parentImage: "/boy.png",
-      caregiverName: "Honda",
-      caregiverImage: "/boy.png",
-      date: "2023-06-02",
-      incident: "Paid",
-      technicians: 3,
+      orderID: "INV-1023",
+      shopOwner: { name: "Ronald Richardson", email: "ronald.r@gmail.com" },
+      plan: "Professional Shop Plan",
+      amount: 129,
+      date: "2026-02-01",
     },
   ];
 
   return (
-    <div>
-      {/* Recent User + Chart */}
+    <div className="mt-[54px] mx-10">
       <div className="grid gap-6 lg:grid-cols-4">
-        <div className="lg:col-span-2 ">
-          <CustomersTable recentCompletedJobs={recentCompletedJobs} />
+        <div className="lg:col-span-2">
+          <UserCard />
         </div>
 
-        {/* Assessment Chart (2 column) */}
-        <div className="lg:col-span-2 mt-4">
+        <div className="lg:col-span-2">
           <div className="bg-white border-0 rounded-2xl">
-            <RecentBilling recentCompletedJobs={recentCompletedJobs} />
+            <RecentBilling recentBilling={recentBilling} />
           </div>
         </div>
       </div>
