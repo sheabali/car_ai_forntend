@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SquarePen } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const UserCard = () => {
   return (
@@ -19,18 +20,22 @@ const UserCard = () => {
 
       {/* Buttons */}
       <div className="w-[30%] flex  flex-col sm:flex-row justify-start gap-4">
-        <Button
-          variant="secondary"
-          className="flex-1 flex items-center justify-center"
-        >
-          <SquarePen className="w-4 h-4 mr-2" /> Edit Profile
-        </Button>
-        <Button
-          variant="secondary"
-          className="flex-1 flex items-center justify-center"
-        >
-          <SquarePen className="w-4 h-4 mr-2" /> Change Password
-        </Button>
+        <Link href="/admin/profile/edit">
+          <Button
+            variant="secondary"
+            className="flex-1 flex items-center justify-center"
+          >
+            <SquarePen className="w-4 h-4 mr-2" /> Edit Profile
+          </Button>
+        </Link>
+        <Link href="/admin/profile/changepassword">
+          <Button
+            variant="secondary"
+            className="flex-1 flex items-center justify-center"
+          >
+            <SquarePen className="w-4 h-4 mr-2" /> Change Password
+          </Button>
+        </Link>
       </div>
 
       {/* Personal Info */}

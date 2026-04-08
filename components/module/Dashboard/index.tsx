@@ -21,6 +21,7 @@ import {
   Store,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -143,13 +144,11 @@ export default function AppHeader({
               align="end"
               className="w-44 mt-1 rounded-xl shadow-lg border border-gray-100"
             >
-              <DropdownMenuItem
-                onClick={onResetPassword}
-                className="flex items-center gap-2 cursor-pointer text-slate-700 rounded-lg"
-              >
-                <KeyRound className="h-4 w-4" />
-                Reset Password
-              </DropdownMenuItem>
+              <Link href="/admin/profile">
+                <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-slate-700 rounded-lg">
+                  Admin Profile
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={onLogout}
