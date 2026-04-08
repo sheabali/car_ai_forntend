@@ -34,7 +34,7 @@ export default function HeroSection() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] leading-tight text-[#14261C] font-semibold my-6 md:my-8">
             Diagnose Vehicle
             <br />
-            <span>
+            <span className="block">
               <FlipWords className="text-[#888888]" words={diagnose} />
             </span>
           </h1>
