@@ -58,7 +58,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="mb-6 ">
+    <div className="">
       <nav
         className={`fixed top-0 left-0 right-0 z-40 transition-all  duration-300 ${
           isScrolled
@@ -67,7 +67,7 @@ export default function Navbar() {
         }`}
       >
         <div className="container mx-auto  px-4 lg:px-6 ">
-          <div className="hidden lg:flex justify-between items-center gap-32 rounded-4xl py-2 px-16">
+          <div className="hidden lg:flex justify-between items-center gap-32 rounded-4xl px-16">
             <div className="shrink-0 transition-transform duration-200 hover:scale-105">
               <Link href="/">
                 <Image
