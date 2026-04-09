@@ -75,8 +75,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-linear-to-b bg-white flex">
       {/* Left Sidebar */}
-      <div className="w-1/2 border-r border-slate-200 relative flex flex-col justify-between bg-[url('/Lo.png')] bg-cover bg-center">
-        <div className="relative z-10">
+      <div className="w-1/2 bg-white border-r border-slate-200 flex flex-col justify-between">
+        <div>
+          {/* Logo */}
           <div className="mb-8 flex justify-center">
             <Image
               src="/r_logo.png"
@@ -88,18 +89,19 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="relative z-10 flex justify-between">
+        <div className="flex justify-between ">
           <Image
             src="/images/Typing.png"
             alt="SmartAuto Logo"
             width={12000}
             height={12000}
-            className="object-cover  rounded-lg"
+            className="object-cover rounded-lg me-11"
             priority
           />
         </div>
       </div>
 
+      {/* Right Side - Login Form */}
       <div className="w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
@@ -122,6 +124,7 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {/* Form */}
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <PHInput
