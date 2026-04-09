@@ -12,7 +12,7 @@ const faqItems = [
     id: "1",
     question: "What is SmartAutoTech.ai?",
     answer:
-      "SmartAutoTech.ai is an AI-powered diagnostic platform designed for automotive repair shops. It helps technicians troubleshoot vehicle issues faster by providing structured, step-by-step guidance based on the problem description and vehicle details.",
+      "SmartAutoTech.ai is an AI-powered diagnostic platform designed for automotive repair shops. It helps Assistants troubleshoot vehicle issues faster by providing structured, step-by-step guidance based on the problem description and vehicle details.",
   },
   {
     id: "2",
@@ -22,9 +22,9 @@ const faqItems = [
   },
   {
     id: "3",
-    question: "What can I ask the AI Technician?",
+    question: "What can I ask the AI Assistant?",
     answer:
-      "You can ask the AI Technician about diagnostic procedures, troubleshooting steps, maintenance guidelines, and common issues related to vehicle repair and maintenance.",
+      "You can ask the AI Assistant about diagnostic procedures, troubleshooting steps, maintenance guidelines, and common issues related to vehicle repair and maintenance.",
   },
   {
     id: "4",
@@ -34,15 +34,15 @@ const faqItems = [
   },
   {
     id: "5",
-    question: "Can the AI Technician learn from conversations?",
+    question: "Can the AI Assistant learn from conversations?",
     answer:
       "The AI system improves over time through aggregated insights, but all conversations are anonymized and handled according to our privacy policy.",
   },
   {
     id: "6",
-    question: "What are the limitations of the AI Technician?",
+    question: "What are the limitations of the AI Assistant?",
     answer:
-      "While the AI Technician is highly capable, it should complement professional expertise. Always refer to manufacturer specifications and consult with certified technicians for critical repairs.",
+      "While the AI Assistant is highly capable, it should complement professional expertise. Always refer to manufacturer specifications and consult with certified Assistants for critical repairs.",
   },
 ];
 
@@ -66,7 +66,7 @@ export default function FAQ() {
 
           <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
             We&apos;ve answered the most common questions from repair shop
-            owners and technicians.
+            owners and Assistants.
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function FAQ() {
             >
               <AccordionTrigger className="text-left hover:no-underline">
                 <span className="flex items-start gap-4">
-                  <span className="text-gray-700 font-semibold text-base flex-shrink-0">
+                  <span className="text-gray-700 font-semibold text-base shrink-0">
                     {index + 1}.
                   </span>
                   <span className="text-gray-900 font-semibold text-base text-left">

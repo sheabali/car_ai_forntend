@@ -23,7 +23,7 @@ const HowWorks = () => {
       icon: AiIcon,
       title: "Smart AI Routing",
       description:
-        "The Shop Foreman AI analyzes the issue and connects you to the right diagnostic specialist instantly.",
+        "The Shop Foreman AI analyzes the issue and connects you to the right AI diagnostic process instantly.",
     },
     {
       icon: DocumentIcon,

@@ -13,7 +13,7 @@ const SmartCard = () => {
 
       <p className="text-muted-foreground mb-12 leading-relaxed">
         Our &quot;Shop Foreman AI&quot; automatically directs you to the right
-        diagnostic expert.
+        diagnostic process.
       </p>
 
       <div className="space-y-6 relative">
