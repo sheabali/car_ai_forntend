@@ -3,12 +3,14 @@
 
 import PHInput from "@/components/form/NRInput";
 import { Button } from "@/components/ui/button";
+import animationData from "@/public/lottie/Service.json";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/features/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { setCookie } from "@/src/utils/cookies";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import Lottie from "lottie-react";
 import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -75,28 +77,31 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-linear-to-b bg-white flex">
       {/* Left Sidebar */}
-      <div className="w-1/2 border-r border-slate-200 relative flex flex-col justify-between bg-[url('/Lo.png')] bg-cover bg-center">
-        <div className="relative z-10">
-          <div className="mb-8 flex justify-center">
-            <Image
-              src="/r_logo.png"
-              alt="SmartAuto Logo"
-              width={200}
-              height={200}
-              className="h-52 w-52"
+      <div className="w-1/2 relative flex flex-col justify-center border-r border-slate-200 overflow-hidden">
+        {/* Background Image with subtle overlay */}
+        <div className="absolute inset-0 bg-[url('/Lo.png')] bg-cover bg-center"></div>
+        {/* <div className="absolute inset-0 bg-black/25"></div> */}
+
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center px-6  space-y-6">
+          {/* Logo */}
+          {/* <Image
+            src="/r_logo.png"
+            alt="SmartAuto Logo"
+            width={180}
+            height={180}
+            className="h-48 w-48 rounded-full shadow-lg animate-bounce"
+          /> */}
+
+          {/* Lottie Animation */}
+          <div className="w-full h-full">
+            <Lottie
+              animationData={animationData}
+              loop
+              autoplay
+              className="w-full h-full"
             />
           </div>
-        </div>
-
-        <div className="relative z-10 flex justify-between">
-          <Image
-            src="/images/Typing.png"
-            alt="SmartAuto Logo"
-            width={12000}
-            height={12000}
-            className="object-cover  rounded-lg"
-            priority
-          />
         </div>
       </div>
 
@@ -104,12 +109,19 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <div className="text-blue-400 text-5xl">
-                <Image src="/message.svg" alt="Logo" width={50} height={50} />
+              <div className="text-primary text-5xl">
+                <Image
+                  src="/r_logo.png"
+                  alt="SmartAuto Logo"
+                  width={180}
+                  height={180}
+                  className="h-48 w-48"
+                />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">
-              WelCome Back !
+
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">
+              WelCome Back
             </h1>
             <p className="text-[#4B5563] text-[16px]">
               Don&apos;t have an account?{" "}
@@ -166,14 +178,14 @@ export default function LoginPage() {
               By signing up, you agree to our{" "}
               <a
                 href="#"
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                className="text-primary hover:text-blue-700 font-medium"
               >
                 Terms of Service
               </a>{" "}
               and{" "}
               <a
                 href="#"
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                className="text-primary hover:text-blue-700 font-medium"
               >
                 Privacy Policy
               </a>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -13,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useResetPasswordMutation } from "@/redux/api/authApi";
-
 import { Eye, EyeOff, Lock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,7 +26,7 @@ export default function ResetPassword() {
 
   const router = useRouter();
 
-  const [resetPassword, { isLoading }] = useResetPasswordMutation() as any;
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const form = useForm<FieldValues>({
     defaultValues: {
@@ -53,153 +51,145 @@ export default function ResetPassword() {
   const toggleConfirmPassword = () => setShowConfirmPassword((prev) => !prev);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // console.log("Resetting password with:", data);
+    if (!isPasswordMatch) return;
 
-    const payload = {
-      email: email,
-      password: data?.confirmPassword,
-    };
+    try {
+      const payload = {
+        email,
+        password: data.confirmPassword,
+      };
 
-    const res = await resetPassword(payload).unwrap();
-    if (res.success) {
-      toast.success(res.message);
-      router.push("/login");
-    } else {
-      toast.error(res.message);
+      const res = (await resetPassword(payload).unwrap()) as any;
+
+      if (res.success) {
+        toast.success(res.message);
+        router.push("/login");
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to reset password");
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Left Panel */}
-      <div className="w-1/2 border-r border-slate-200 relative flex flex-col justify-between bg-[url('/Lo.png')] bg-cover bg-center">
-        <div className="relative z-10">
-          <div className="mb-8 flex justify-center">
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center p-4"
+      style={{ backgroundImage: "url('/Lo.png')" }}
+    >
+      <div className="bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl p-8 w-full max-w-2xl mx-4">
+        <div>
+          <Link href="/">
             <Image
               src="/r_logo.png"
               alt="SmartAuto Logo"
               width={200}
               height={200}
-              className="h-52 w-52"
+              className="h-52 w-52 flex items-center justify-center mx-auto"
             />
-          </div>
+          </Link>
         </div>
 
-        <div className="relative z-10 flex justify-between">
-          <Image
-            src="/images/Typing.png"
-            alt="SmartAuto Logo"
-            width={12000}
-            height={12000}
-            className="object-cover  rounded-lg"
-            priority
-          />
+        <div className="mb-6 text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            Create a new password
+          </h2>
         </div>
-      </div>
 
-      {/* Right Panel */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 bg-white">
-        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-          <div className="mb-8 text-center">
-            <h2 className="text-[30px] font-bold text-gray-800 mb-2">
-              Create a new password
-            </h2>
-          </div>
-
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* New Password */}
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 font-medium">
-                      New Password
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <Input
-                          type={showNewPassword ? "text" : "password"}
-                          placeholder="Enter new password"
-                          {...field}
-                          className="py-6 pr-12  ps-12 rounded-2xl"
-                        />
-                        <button
-                          type="button"
-                          onClick={toggleNewPassword}
-                          className="absolute inset-y-0 right-4 flex items-center text-gray-500"
-                        >
-                          {showNewPassword ? (
-                            <EyeOff size={20} />
-                          ) : (
-                            <Eye size={20} />
-                          )}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Confirm Password */}
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 font-medium">
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                        <Input
-                          type={showConfirmPassword ? "text" : "password"}
-                          placeholder="Re-enter new password"
-                          {...field}
-                          className="py-6 ps-12 pr-12 rounded-2xl"
-                        />
-                        <button
-                          type="button"
-                          onClick={toggleConfirmPassword}
-                          className="absolute inset-y-0 right-4 flex items-center text-gray-500"
-                        >
-                          {showConfirmPassword ? (
-                            <EyeOff size={20} />
-                          ) : (
-                            <Eye size={20} />
-                          )}
-                        </button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Submit Button */}
-              <Link href="/login">
-                <Button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 rounded-lg py-6 font-medium transition-colors"
-                  disabled={isSubmitting || !isPasswordMatch}
-                >
-                  Continue
-                </Button>
-              </Link>
-
-              {/* Show password mismatch error */}
-              {!isPasswordMatch && watchConfirmPassword && (
-                <p className="text-sm text-red-500 font-medium text-center -mt-4">
-                  Passwords do not match.
-                </p>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-5 pb-8"
+          >
+            <FormField
+              control={form.control}
+              name="newPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 font-semibold">
+                    New Password
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Input
+                        type={showNewPassword ? "text" : "password"}
+                        placeholder="Enter new password"
+                        {...field}
+                        className="py-6 pl-12 pr-12 rounded-2xl"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={toggleNewPassword}
+                        className="absolute inset-y-0 right-4 flex items-center text-gray-500"
+                      >
+                        {showNewPassword ? (
+                          <EyeOff size={20} />
+                        ) : (
+                          <Eye size={20} />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </form>
-          </Form>
-        </div>
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700 font-semibold">
+                    Confirm Password
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <Input
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Re-enter new password"
+                        {...field}
+                        className="py-6 pl-12 pr-12 rounded-2xl"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={toggleConfirmPassword}
+                        className="absolute inset-y-0 right-4 flex items-center text-gray-500"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={20} />
+                        ) : (
+                          <Eye size={20} />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {!isPasswordMatch && watchConfirmPassword && (
+              <p className="text-sm text-red-500 font-medium text-center -mt-4">
+                Passwords do not match
+              </p>
+            )}
+
+            <Link href="/admin-forgot-password/otp/successful">
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-6 font-semibold transition-colors"
+                disabled={isSubmitting || !isPasswordMatch || isLoading}
+              >
+                {isLoading ? "Updating..." : "Continue"}
+              </Button>
+            </Link>
+          </form>
+        </Form>
       </div>
     </div>
   );

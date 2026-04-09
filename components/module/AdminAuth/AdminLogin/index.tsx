@@ -120,13 +120,15 @@ const AdminLogin = () => {
               </Link>
             </div>
 
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-6 font-semibold"
-            >
-              {isLoading ? "Loading..." : "Sign In"}
-            </Button>
+            <Link href="/admin/dashboard">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-6 font-semibold"
+              >
+                {isLoading ? "Loading..." : "Login"}
+              </Button>
+            </Link>
           </form>
         </FormProvider>
       </div>

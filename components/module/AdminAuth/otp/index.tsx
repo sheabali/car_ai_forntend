@@ -238,7 +238,7 @@ export default function AdminOtp() {
               {/* BUTTONS */}
               <div className="flex gap-4">
                 <Link
-                  href="/forgot-password/otp/change-password"
+                  href="/admin-forgot-password/otp/change-password"
                   className="w-full"
                 >
                   <button
