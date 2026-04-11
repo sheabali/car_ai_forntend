@@ -23,7 +23,7 @@ const pricingPlans = [
       "Shop Foreman AI",
       "Mechanical Diagnostics AI",
       "OBD-II Code Interpreter AI",
-      "3 technician users",
+      "3 technician accounts",
     ],
   },
   {
@@ -44,7 +44,7 @@ const pricingPlans = [
       "Electrical Diagnostics AI",
       "Transmission Diagnostics AI",
       "OBD-II Code Interpreter AI",
-      "5 technician users",
+      "5 technician accounts",
     ],
   },
   {
@@ -66,7 +66,7 @@ const pricingPlans = [
       "Transmission Diagnostics AI",
       "OBD-II Code Interpreter AI",
       "European Vehicle Specialist AI",
-      "5 technician users",
+      "5 technician accounts",
     ],
   },
 ];

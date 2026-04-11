@@ -66,7 +66,7 @@ export default function FAQ() {
 
           <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
             We&apos;ve answered the most common questions from repair shop
-            owners and Assistants.
+            owners and technicians.
           </p>
         </div>
 
