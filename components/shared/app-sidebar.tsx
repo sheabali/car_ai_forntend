@@ -25,7 +25,7 @@ const data = {
     navMain: [
       {
         title: "Dashboard",
-        url: "/user",
+        url: "/shop-owner/dashboard",
         icon: LayoutDashboard,
       },
       {

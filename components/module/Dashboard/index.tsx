@@ -36,7 +36,7 @@ const adminNavItems = [
 ];
 
 const userNavItems = [
-  { title: "Dashboard", url: "/user", icon: LayoutDashboard },
+  { title: "Dashboard", url: "/shop-owner/dashboard", icon: LayoutDashboard },
   { title: "My Subscription", url: "/user/subscription", icon: CreditCard },
 ];
 
