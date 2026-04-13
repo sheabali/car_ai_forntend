@@ -37,7 +37,21 @@ const adminNavItems = [
 
 const userNavItems = [
   { title: "Dashboard", url: "/shop-owner/dashboard", icon: LayoutDashboard },
-  { title: "My Subscription", url: "/user/subscription", icon: CreditCard },
+  {
+    title: "Invitations",
+    url: "/shop-owner/dashboard/invitations",
+    icon: CreditCard,
+  },
+  {
+    title: "Technician Management",
+    url: "/shop-owner/dashboard/technician-management",
+    icon: CreditCard,
+  },
+  {
+    title: "Billing",
+    url: "/shop-owner/dashboard/billing",
+    icon: CreditCard,
+  },
 ];
 
 interface UserInfo {
