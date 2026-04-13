@@ -28,17 +28,10 @@ const RecentBillingTable = ({
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        id: "parentName",
-        header: "Parent Name",
+        accessorKey: "id",
+        header: "Order ID",
         cell: ({ row }) => (
-          <p className="font-medium text-gray-900">{row.original.parentName}</p>
-        ),
-      },
-      {
-        id: "shopName",
-        header: "Shop Name",
-        cell: ({ row }) => (
-          <p className="text-gray-700">{row.original.caregiverName}</p>
+          <p className="font-medium text-gray-900">{row.original.id}</p>
         ),
       },
       {
@@ -53,27 +46,27 @@ const RecentBillingTable = ({
         ),
       },
       {
-        id: "status",
-        header: "Status",
-        cell: ({ row }) => <StatusBadge status={row.original.incident} />,
+        accessorKey: "plan",
+        header: "Plan",
+        cell: ({ row }) => <p className="text-gray-700">{row.original.plan}</p>,
       },
       {
-        accessorKey: "technicians",
-        header: "Technicians",
+        accessorKey: "amount",
+        header: "Amount",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">{row.original.technicians}</p>
+          <p className="text-gray-700 font-medium">${row.original.amount}</p>
         ),
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => <StatusBadge status={row.original.status} />,
       },
     ],
     [],
   );
-
   return (
-    <div className="rounded-xl bg-white shadow ">
-      <div className="border-b p-4">
-        <h2 className="text-lg font-semibold text-gray-900">Recent Billing</h2>
-      </div>
-
+    <div className="rounded-xl bg-white shadow pt-2 mt-4">
       <div className="pb-4 px-4">
         <RWTable columns={columns} data={recentCompletedJobs} />
       </div>

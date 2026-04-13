@@ -70,11 +70,7 @@ const CustomersTable = ({
 
   return (
     <div className="rounded-xl bg-white shadow mt-4">
-      <div className="border-b p-4">
-        <h2 className="text-lg font-semibold text-gray-900">Recent Users</h2>
-      </div>
-
-      <div className="pb-4 px-4">
+      <div className="pb-4 px-4 pt-2">
         <RWTable columns={columns} data={recentCompletedJobs} />
       </div>
     </div>

@@ -1,56 +1,54 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import MetricCard from "@/components/shared/MetricCardDashboard";
 import { Sparkles, UserMinus, Users } from "lucide-react";
 import ActiveUsersChart from "./ActiveUsersChart";
-import AiSessionsCard from "./AiSessionsCard";
+import PerformanceTable from "./PerformanceTable";
 import RecentBillingTable from "./RecentBillingTable";
-import CustomersTable from "./UserTable";
+import TechnicianPerformance from "./technicianPerformance";
 
 const ShopOwnerDashboardOverview = () => {
-  const recentCompletedJobs = [
+  const recentBilling = [
     {
-      id: "1",
-      parentName: "John Doe",
-      parentImage: "/boy.png",
-      caregiverName: "Toyota",
-      caregiverImage: "/boy.png",
+      id: "ORD-001",
       date: "2023-06-01",
-      incident: "Paid",
-      technicians: 5,
+      plan: "Basic Plan",
+      amount: 49,
+      status: "Paid",
     },
     {
-      id: "2",
-      parentName: "Jane Smith",
-      parentImage: "/boy.png",
-      caregiverName: "Honda",
-      caregiverImage: "/boy.png",
+      id: "ORD-002",
       date: "2023-06-02",
-      incident: "Paid",
-      technicians: 3,
+      plan: "Pro Plan",
+      amount: 99,
+      status: "UNPAID",
     },
     {
-      id: "2",
-      parentName: "Jane Smith",
-      parentImage: "/boy.png",
-      caregiverName: "Honda",
-      caregiverImage: "/boy.png",
-      date: "2023-06-02",
-      incident: "Paid",
-      technicians: 3,
-    },
-    {
-      id: "2",
-      parentName: "Jane Smith",
-      parentImage: "/boy.png",
-      caregiverName: "Honda",
-      caregiverImage: "/boy.png",
-      date: "2023-06-02",
-      incident: "Paid",
-      technicians: 3,
+      id: "ORD-003",
+      date: "2023-06-03",
+      plan: "Enterprise",
+      amount: 199,
+      status: "Paid",
     },
   ];
-
-  const assessmentCompletionRate = 0.8;
+  const performanceTable = [
+    {
+      id: "1",
+      technicianName: "John Doe",
+      emailAddress: "ko1E1@example.com",
+      sessions: "2023-06-01",
+    },
+    {
+      id: "1",
+      technicianName: "John Doe",
+      emailAddress: "ko1E1@example.com",
+      sessions: "2023-06-01",
+    },
+    {
+      id: "1",
+      technicianName: "John Doe",
+      emailAddress: "ko1E1@example.com",
+      sessions: "2023-06-01",
+    },
+  ];
 
   const metrics = [
     {
@@ -63,16 +61,15 @@ const ShopOwnerDashboardOverview = () => {
     {
       title: "Active Invitations",
       value: 0,
-      icon: <UserMinus className="text-[#1B64F6]" />,
       invitations: "Remaining Invitations",
+      icon: <UserMinus className="text-[#1B64F6]" />,
       bg: "bg-[#F0F5FF]",
     },
     {
       title: "Active Plan",
-
-      icon: <Sparkles className="text-[#F5CC1D]" />,
       plan: "Professional Shop Plan",
       nextRenewal: "Oct 21",
+      icon: <Sparkles className="text-[#F5CC1D]" />,
       bg: "bg-[#fdf9e8]",
     },
   ];
@@ -85,32 +82,15 @@ const ShopOwnerDashboardOverview = () => {
         ))}
       </div>
 
-      {/* Recent User + Chart */}
-      <div className="grid gap-6 lg:grid-cols-4">
-        <div className="lg:col-span-2 ">
-          <CustomersTable recentCompletedJobs={recentCompletedJobs} />
+      <div className="grid gap-6 lg:grid-cols-4 mt-4">
+        <div className="lg:col-span-2 bg-[#f3f5f7] rounded-2xl">
+          <ActiveUsersChart />
+          <RecentBillingTable recentCompletedJobs={recentBilling} />
         </div>
 
-        {/* Assessment Chart (2 column) */}
-        <div className="lg:col-span-2 mt-4">
-          <div className="bg-white border-0 rounded-2xl">
-            <ActiveUsersChart />
-          </div>
-        </div>
-      </div>
-      {/* Recent User + Chart */}
-      <div className="grid gap-6 lg:grid-cols-3 mt-4">
-        <div className="lg:col-span-1">
-          <div className="bg-white border-0 rounded-2xl">
-            <AiSessionsCard />
-          </div>
-        </div>
-
-        {/* Assessment Chart (2 column) */}
-        <div className="lg:col-span-2">
-          <div className="bg-white border-0 rounded-2xl">
-            <RecentBillingTable recentCompletedJobs={recentCompletedJobs} />
-          </div>
+        <div className="lg:col-span-2 bg-[#f3f5f7]">
+          <TechnicianPerformance />
+          <PerformanceTable performanceTable={performanceTable} />
         </div>
       </div>
     </div>

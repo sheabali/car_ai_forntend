@@ -43,7 +43,7 @@ export function RWTable<TData, TValue>({
               {headerGroup.headers.map((header) => (
                 <TableHead
                   key={header.id}
-                  className="py-6 text-md font-semibold text-gray-600 first:rounded-l-xl last:rounded-r-xl"
+                  className="py-6  text-md font-semibold text-gray-600 first:rounded-l-xl last:rounded-r-xl"
                 >
                   {header.isPlaceholder
                     ? null
