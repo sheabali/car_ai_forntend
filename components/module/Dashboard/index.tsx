@@ -19,6 +19,7 @@ import {
   LogOut,
   Menu,
   Store,
+  User,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -34,6 +35,8 @@ const adminNavItems = [
     icon: CreditCard,
   },
 ];
+
+const role = "shop-owner";
 
 const userNavItems = [
   { title: "Dashboard", url: "/shop-owner/dashboard", icon: LayoutDashboard },
@@ -158,9 +161,16 @@ export default function AppHeader({
               align="end"
               className="w-44 mt-1 rounded-xl shadow-lg border border-gray-100"
             >
-              <Link href="/admin/profile">
+              <Link
+                href={`${role === "ADMIN" ? "/admin/profile" : "/shop-owner/dashboard/profile"}`}
+              >
                 <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-slate-700 rounded-lg">
-                  Admin Profile
+                  {role === "ADMIN" ? (
+                    <User className="h-4 w-4" />
+                  ) : (
+                    <>Shop Owner</>
+                  )}{" "}
+                  Profile
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
