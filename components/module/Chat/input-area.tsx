@@ -20,7 +20,7 @@ export function InputArea() {
       await sendMessage(text);
     } catch (error) {
       console.error("Failed to send message:", error);
-      setMessage(text); // Revert the message
+      setMessage(text);
     }
   };
 
@@ -52,8 +52,8 @@ export function InputArea() {
               handleSubmit(e);
             }
           }}
-          placeholder="Enter vehicle details and describe the issue (include symptoms, when it happens, and any warning signs)..."
-          className="min-h-[60px] resize-none text-sm"
+          placeholder="Enter vehicle details  and describe the issue (include symptoms, when it happens, and any warning signs)..."
+          className="min-h-[120px] shadow-md resize-none text-black text-sm"
           disabled={isLoading}
         />
       </div>

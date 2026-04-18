@@ -32,7 +32,7 @@ export default function Home() {
   }
 
   //   if (!isAuthenticated) {
-  //     return <AuthPage />;
+  //     return <AuthPage />
   //   }
 
   return (
