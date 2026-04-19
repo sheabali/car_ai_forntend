@@ -57,7 +57,7 @@ export function ChatSidebar({ onClose }: ChatSidebarProps) {
             placeholder="Search chats..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 h-9 text-sm"
+            className="pl-8 h-9 text-sm text-[#042055]"
           />
         </div>
       </div>

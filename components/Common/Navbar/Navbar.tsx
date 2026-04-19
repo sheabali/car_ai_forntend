@@ -103,7 +103,7 @@ export default function Navbar() {
                   </Button>
                 </Link>
 
-                <Link href="/">
+                <Link href="/register">
                   <Button
                     variant="default"
                     className="gap-2 py-6 flex items-center px-10"

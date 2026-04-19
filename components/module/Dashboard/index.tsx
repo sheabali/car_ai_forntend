@@ -216,7 +216,7 @@ export default function AppHeader({
                   </svg>
                 </div>
                 <span className="text-base font-semibold text-slate-800">
-                  SmartAutoTech<span className="text-blue-600">.ai</span>
+                  SmartAutoTech<span className="text-blue-600"></span>
                 </span>
               </div>
 

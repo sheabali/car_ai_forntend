@@ -26,7 +26,7 @@ export function ChatWindow() {
         {/* Background */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: "url('/images/eliment.jpg')" }}
+          style={{ backgroundImage: "url('/Lo.png')" }}
         />
         <div className="absolute inset-0 bg-white/80 backdrop-blur-sm" />
 
@@ -39,7 +39,7 @@ export function ChatWindow() {
           </div>
 
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-black">
+            <h2 className="text-xl sm:text-2xl md:text-[32px] font-bold text-[#111827]">
               What can I help with?
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground mt-2">
@@ -58,7 +58,7 @@ export function ChatWindow() {
       {/* Background */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{ backgroundImage: "url('/images/Eliment.jpg')" }}
+        style={{ backgroundImage: "url('/Lo.png')" }}
       />
       <div className="absolute inset-0 bg-white backdrop-blur-sm" />
 

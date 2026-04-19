@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FlipWords } from "@/src/components/ui/flip-words";
 import { Send, X } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function HeroSection() {
@@ -46,9 +47,11 @@ export default function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <Button className="py-5 px-6 sm:px-10 rounded-xl sm:rounded-2xl w-full sm:w-auto">
-              Get started
-            </Button>
+            <Link href="/register">
+              <Button className="py-5 px-6 sm:px-10 rounded-xl sm:rounded-2xl w-full sm:w-auto">
+                Get started
+              </Button>
+            </Link>
             <Button
               variant="outline"
               className="py-5 px-6 sm:px-10 w-full sm:w-auto bg-[#f5f8fb] rounded-xl sm:rounded-2xl border-primary text-primary font-semibold"
