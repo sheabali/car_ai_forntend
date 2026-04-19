@@ -2,6 +2,7 @@
 "use client";
 
 import PHInput from "@/components/form/NRInput";
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/features/authSlice";
@@ -151,15 +152,14 @@ export default function LoginPage() {
                   Forgot password?
                 </Link>
               </div>
-              <Link href="/">
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-6 font-semibold"
-                >
-                  {isLoading ? "Loading..." : "Sign In"}
-                </Button>
-              </Link>
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-6 font-semibold"
+              >
+                {isLoading ? <Loading /> : "Sign In"}
+              </Button>
             </form>
           </FormProvider>
 
