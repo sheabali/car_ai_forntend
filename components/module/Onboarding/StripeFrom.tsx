@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Loading from "@/components/shared/Loading";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -11,10 +12,8 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { SuccessModal } from "./success-modal";
 
 const cardStyle = {
   style: {
@@ -36,19 +35,13 @@ export function BookingAndPaymentForm({
   onSuccess,
   isSubmitting = false,
 }: Props) {
-  const router = useRouter();
-
   const stripe = useStripe();
   const elements = useElements();
-
-  const [showSuccess, setShowSuccess] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
   const handleValidateCard = async () => {
-    setShowSuccess(true);
-
     setPaymentError(null);
     setLoading(true);
 
@@ -135,14 +128,8 @@ export function BookingAndPaymentForm({
         disabled={isDisabled}
         className="w-full bg-primary hover:bg-primary/90 py-6"
       >
-        {loading
-          ? "Validating..."
-          : isSubmitting
-            ? "Processing payment..."
-            : "Continue"}
+        {loading ? <Loading /> : isSubmitting ? <Loading /> : "Continue"}
       </Button>
-
-      {showSuccess && <SuccessModal />}
     </div>
   );
 }

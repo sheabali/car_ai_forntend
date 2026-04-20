@@ -11,6 +11,7 @@ import {
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 import PlanSelectionSkeleton from "./PlanSelectionSkeleton";
 
 type BillingPeriod = "monthly" | "annual";
@@ -46,14 +47,12 @@ const getPlanPrice = (plan: SubscriptionPlan, period: BillingPeriod) => {
 
 const getMonthlyFromAnnual = (plan: SubscriptionPlan) => {
   const annual = plan.prices.find((p) => p.duration === "Annually")?.price ?? 0;
-
   return Math.floor(annual / 12);
 };
 
 const getYearlySavings = (plan: SubscriptionPlan) => {
   const monthly = plan.prices.find((p) => p.duration === "Monthly")?.price ?? 0;
   const annual = plan.prices.find((p) => p.duration === "Annually")?.price ?? 0;
-
   return monthly * 12 - annual;
 };
 
@@ -81,9 +80,30 @@ export default function PlanSelection() {
       const res = (await createSubscription(payload).unwrap()) as any;
 
       if (res?.success) {
-        router.push("/register/payment");
+        toast.success(
+          res?.data?.message ||
+            "Subscription intent created! Redirecting to payment...",
+        );
+
+        if (res?.data?.orderId) {
+          // FIX: Store clientSecret as a plain string (no JSON.stringify)
+          // Only store if the value actually exists
+          if (res.data.clientSecret) {
+            localStorage.setItem("clientSecret", res.data.clientSecret);
+          } else {
+            console.warn("No clientSecret returned from server");
+          }
+
+          router.push(
+            `/register/payment?paymentId=${res.data.orderId}&planId=${planId}`,
+          );
+        }
       }
-    } catch (err) {
+    } catch (err: any) {
+      toast.error(
+        err?.data?.message ||
+          "Failed to create subscription intent. Please try again.",
+      );
       console.error("Subscription error:", err);
     } finally {
       setLoadingPlanId(null);

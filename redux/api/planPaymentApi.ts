@@ -3,7 +3,7 @@ import { baseApi } from "./baseApi";
 
 export const planPaymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllPlan: builder.query<any, void>({
+    getAllPlan: builder.query({
       query: () => ({
         url: "/plans",
         method: "GET",
@@ -22,9 +22,24 @@ export const planPaymentApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    getSingleSubscription: builder.query<any, string>({
+      query: (id) => ({
+        url: `/plans/${id}`,
+        method: "GET",
+      }),
+    }),
+
+    getMyPaymentId: builder.query<any, string>({
+      query: (id) => ({
+        url: `/payment/${id}`,
+        method: "GET",
+      }),
+    }),
+
     paymentConfirmPayment: builder.mutation<any, any>({
-      query: ({ planId, data }) => ({
-        url: `/payment/confirm-payment/${planId}`,
+      query: (data) => ({
+        url: `/payment/confirm-payment`,
         method: "POST",
         body: data,
       }),
@@ -37,4 +52,6 @@ export const {
   useGetSinglePlanQuery,
   useCreateSubscriptionIntentMutation,
   usePaymentConfirmPaymentMutation,
+  useGetSingleSubscriptionQuery,
+  useGetMyPaymentIdQuery,
 } = planPaymentApi;
