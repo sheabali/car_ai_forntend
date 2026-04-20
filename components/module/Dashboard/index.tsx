@@ -107,13 +107,13 @@ export default function AppHeader({
       <div className="mx-auto flex h-16  items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-2 px-4 py-2 rounded-md">
           <Image
-            src="/logo.png"
+            src="/r_logo.png"
             alt="Logo"
-            width={40}
-            height={40}
+            width={80}
+            height={80}
             className="size-auto "
           />
-          <span className="text-lg font-bold">RegWheat</span>
+          {/* <span className="text-lg font-bold">RegWheat</span> */}
         </div>
 
         <nav className="hidden md:flex items-center bg-[#ffffff] py-2 px-2 rounded-full gap-1">

@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { OnboardingLayout } from "@/components/module/Onboarding/onboarding-layout";
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRegisterMutation } from "@/redux/api/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Eye,
@@ -19,6 +22,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import {
   OnboardingProvider,
@@ -50,6 +54,9 @@ type ShopSetupFormData = z.infer<typeof shopSetupSchema>;
 
 function ShopSetupContent() {
   const router = useRouter();
+
+  const [createUser, { isLoading }] = useRegisterMutation();
+
   const { data, updateData } = useOnboarding();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -73,10 +80,30 @@ function ShopSetupContent() {
     },
   });
 
-  const onSubmit = (formData: ShopSetupFormData) => {
-    console.log("formData", formData);
+  const onSubmit = async (formData: ShopSetupFormData) => {
+    const payload = {
+      fullName: formData.ownerName,
+      shopAddress: formData.shopAddress,
+      shopName: formData.shopName,
+      phone: formData.phoneNumber,
+      email: formData.email,
+      password: formData.password,
+    };
 
-    router.push("/register/plan-selection");
+    try {
+      const res = (await createUser(payload).unwrap()) as any;
+
+      if (res?.success) {
+        toast.success(
+          "Registration successful! Please select a plan to continue.",
+        );
+
+        router.push("/register/plan-selection");
+      }
+    } catch (error: any) {
+      console.error("Error during registration:", error);
+      toast.error(error?.data?.message || "Registration failed");
+    }
   };
 
   return (
@@ -272,7 +299,7 @@ function ShopSetupContent() {
         type="submit"
         className="w-full bg-[#042055] hover:bg-[#042055] text-white font-semibold py-6"
       >
-        Continue
+        {isLoading ? <Loading /> : "Continue"}
       </Button>
     </form>
   );

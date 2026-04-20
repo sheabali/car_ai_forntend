@@ -1,171 +1,192 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  useCreateSubscriptionIntentMutation,
+  useGetAllSubscriptionQuery,
+} from "@/redux/api/subscriptionApi";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import PlanSelectionSkeleton from "./PlanSelectionSkeleton";
 
-const pricingPlans = [
-  {
-    id: "basic",
-    name: "Basic Shop Plan",
-    description:
-      "Small teams handling everyday diagnostics who want to reduce guesswork and save time.",
-    monthlyPrice: 99,
-    annualPrice: 79,
-    yearlySavings: 612,
-    cta: "Get Started Now",
-    featured: false,
-    features: [
-      "Shop Foreman AI",
-      "Mechanical Diagnostics AI",
-      "OBD-II Code Interpreter AI",
-      "3 technician accounts",
-    ],
-  },
-  {
-    id: "professional",
-    name: "Professional Shop Plan",
-    description:
-      "Includes all Basic Plan features plus advanced Transmission and Electrical diagnostic AI for deeper troubleshooting.",
-    monthlyPrice: 159,
-    annualPrice: 129,
-    yearlySavings: 360,
-    cta: "Start 14 days free trial",
-    featured: true,
-    features: [
-      "Shop Foreman AI",
-      "Mechanical Diagnostics AI",
-      "Electrical Diagnostics AI",
-      "Transmission Diagnostics AI",
-      "OBD-II Code Interpreter AI",
-      "5 technician accounts",
-    ],
-  },
-  {
-    id: "european",
-    name: "European Specialist Plan",
-    description:
-      "Includes all Professional Shop features plus a European Vehicle Specialist AI.",
-    monthlyPrice: 219,
-    annualPrice: 179,
-    yearlySavings: 480,
-    cta: "Get Started Now",
-    featured: false,
-    features: [
-      "Shop Foreman AI",
-      "Mechanical Diagnostics AI",
-      "Electrical Diagnostics AI",
-      "Transmission Diagnostics AI",
-      "OBD-II Code Interpreter AI",
-      "European Vehicle Specialist AI",
-      "5 technician accounts",
-    ],
-  },
-];
+type BillingPeriod = "monthly" | "annual";
+type ApiDuration = "Monthly" | "Annually";
+
+interface Price {
+  duration: ApiDuration;
+  price: number;
+}
+
+interface SubscriptionPlan {
+  id: string;
+  name: string;
+  description: string;
+  technicianLimit: number;
+  hasTrial: boolean;
+  features: string[];
+  prices: Price[];
+}
+
+const formatDuration = (period: BillingPeriod): ApiDuration =>
+  period === "monthly" ? "Monthly" : "Annually";
+
+const getPlanPrice = (plan: SubscriptionPlan, period: BillingPeriod) => {
+  return (
+    plan.prices.find((p) =>
+      period === "monthly"
+        ? p.duration === "Monthly"
+        : p.duration === "Annually",
+    )?.price ?? 0
+  );
+};
+
+const getMonthlyFromAnnual = (plan: SubscriptionPlan) => {
+  const annual = plan.prices.find((p) => p.duration === "Annually")?.price ?? 0;
+
+  return Math.floor(annual / 12);
+};
+
+const getYearlySavings = (plan: SubscriptionPlan) => {
+  const monthly = plan.prices.find((p) => p.duration === "Monthly")?.price ?? 0;
+  const annual = plan.prices.find((p) => p.duration === "Annually")?.price ?? 0;
+
+  return monthly * 12 - annual;
+};
 
 export default function PlanSelection() {
   const router = useRouter();
 
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
-    "monthly",
-  );
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>("monthly");
+  const [loadingPlanId, setLoadingPlanId] = useState<string | null>(null);
 
-  const handleSelectPlan = (planId: string) => {
-    localStorage.setItem(
-      "selectedPlan",
-      JSON.stringify({
-        plan: planId,
-        billingCycle: billingPeriod,
-      }),
-    );
+  const { data, isLoading } = useGetAllSubscriptionQuery({}) as any;
+  const plans: SubscriptionPlan[] = data?.data || [];
 
-    router.push("/register/payment");
+  const [createSubscription, { isLoading: isCreating }] =
+    useCreateSubscriptionIntentMutation();
+
+  const handleSelectPlan = async (planId: string) => {
+    setLoadingPlanId(planId);
+
+    const payload = {
+      planId,
+      duration: formatDuration(billingPeriod),
+    };
+
+    try {
+      const res = (await createSubscription(payload).unwrap()) as any;
+
+      if (res?.success) {
+        router.push("/register/payment");
+      }
+    } catch (err) {
+      console.error("Subscription error:", err);
+    } finally {
+      setLoadingPlanId(null);
+    }
   };
 
+  if (isLoading) return <PlanSelectionSkeleton />;
+
   return (
-    <main className="min-h-screen bg-white">
-      <div className="px-4 pb-20">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
-            {pricingPlans.map((plan) => (
-              <Card
-                key={plan.id}
-                className={`p-8 flex flex-col ${
-                  plan.featured
-                    ? "bg-linear-to-b from-[#4d73bc] to-[#103376] text-white scale-105"
-                    : "border-2 border-gray-200"
-                }`}
-              >
-                <h3 className="text-2xl font-bold">{plan.name}</h3>
+    <main className="min-h-screen bg-white px-4 pb-20">
+      <div className="container mx-auto grid md:grid-cols-3 gap-8">
+        {plans.map((plan, index) => {
+          const isFeatured = index === 1;
 
-                <p className="text-sm mt-2 opacity-80">{plan.description}</p>
+          const price = getPlanPrice(plan, billingPeriod);
+          const savings = getYearlySavings(plan);
+          const monthlyEquivalent = getMonthlyFromAnnual(plan);
 
-                {/* Toggle */}
-                <div className="my-4">
-                  <div className="inline-flex rounded-full bg-gray-100 p-1">
+          return (
+            <Card
+              key={plan.id}
+              className={`p-8 flex flex-col ${
+                isFeatured
+                  ? "bg-linear-to-b from-[#4d73bc] to-[#103376] text-white scale-105"
+                  : "border-2 border-gray-200"
+              }`}
+            >
+              <h3 className="text-2xl font-bold">{plan.name}</h3>
+              <p className="text-sm mt-2 opacity-80">{plan.description}</p>
+
+              <div className="my-4 flex justify-center">
+                <div className="inline-flex rounded-full bg-gray-100 p-1">
+                  {(["monthly", "annual"] as BillingPeriod[]).map((period) => (
                     <button
-                      onClick={() => setBillingPeriod("monthly")}
-                      className={`px-4 py-1 rounded-full ${
-                        billingPeriod === "monthly"
+                      key={period}
+                      onClick={() => setBillingPeriod(period)}
+                      className={`px-4 py-1 rounded-full text-sm capitalize ${
+                        billingPeriod === period
                           ? "bg-[#042055] text-white"
-                          : ""
+                          : "text-gray-600"
                       }`}
                     >
-                      Monthly
+                      {period}
                     </button>
-                    <button
-                      onClick={() => setBillingPeriod("annual")}
-                      className={`px-4 py-1 rounded-full ${
-                        billingPeriod === "annual"
-                          ? "bg-[#042055] text-white"
-                          : ""
-                      }`}
-                    >
-                      Annual
-                    </button>
-                  </div>
-                </div>
-
-                {/* Price */}
-                <div className="mb-4">
-                  <span className="text-5xl font-bold">
-                    $
-                    {billingPeriod === "monthly"
-                      ? plan.monthlyPrice
-                      : plan.annualPrice}
-                  </span>
-                  <span className="ml-2 text-sm">
-                    /month {billingPeriod === "annual" && "(billed yearly)"}
-                  </span>
-                </div>
-
-                {billingPeriod === "annual" && (
-                  <p className="text-xs mb-4">
-                    Save ${plan.yearlySavings}/year
-                  </p>
-                )}
-
-                <Button
-                  onClick={() => handleSelectPlan(plan.id)}
-                  className="mb-6"
-                >
-                  {plan.cta}
-                </Button>
-
-                <div className="space-y-3 mt-auto">
-                  {plan.features.map((feature, i) => (
-                    <div key={i} className="flex gap-2 items-center">
-                      <Check className="w-4 h-4" />
-                      <span className="text-sm">{feature}</span>
-                    </div>
                   ))}
                 </div>
-              </Card>
-            ))}
-          </div>
-        </div>
+              </div>
+
+              <div className="mb-2">
+                <span className="text-5xl font-bold">
+                  ${billingPeriod === "annual" ? monthlyEquivalent : price}
+                </span>
+                <span className="ml-2 text-sm">
+                  /month {billingPeriod === "annual" && "(billed yearly)"}
+                </span>
+              </div>
+
+              {billingPeriod === "annual" && savings > 0 && (
+                <p className="text-xs mb-4 text-green-400">
+                  Save ${savings}/year
+                </p>
+              )}
+
+              {plan.hasTrial && (
+                <p className="text-xs mb-2 font-medium text-blue-300">
+                  ✓ Free trial available
+                </p>
+              )}
+
+              <Button
+                onClick={() => handleSelectPlan(plan.id)}
+                disabled={loadingPlanId === plan.id}
+                className={`mb-6 mt-4 font-semibold py-3 ${
+                  plan.hasTrial
+                    ? "bg-white text-[#042055]"
+                    : "bg-[#042055] text-white"
+                }`}
+              >
+                {loadingPlanId === plan.id ? (
+                  <Loading />
+                ) : plan.hasTrial ? (
+                  "Start 14 days free trial"
+                ) : (
+                  "Get Started"
+                )}
+              </Button>
+
+              <p className="text-md font-semibold opacity-70 mb-3">
+                Up to {plan.technicianLimit} technician
+                {plan.technicianLimit > 1 && "s"}
+              </p>
+
+              <div className="space-y-3">
+                {plan.features.map((feature, i) => (
+                  <div key={i} className="flex gap-2 items-center">
+                    <Check className="w-4 h-4" />
+                    <span className="text-sm">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          );
+        })}
       </div>
     </main>
   );
