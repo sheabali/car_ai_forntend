@@ -37,8 +37,8 @@ export default function MetricCard({
           )}
 
           {invitations && (
-            <div className="text-sm font-medium rounded-full text-gray-500">
-              {invitations}
+            <div className="text-sm font-medium  bg-[#f0f5ff] text-[#1b64f6] rounded-full py-1 px-2">
+              {invitations} Remaining Invitations
             </div>
           )}
         </div>

@@ -28,10 +28,10 @@ const RecentBillingTable = ({
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        accessorKey: "id",
+        accessorKey: "orderId",
         header: "Order ID",
         cell: ({ row }) => (
-          <p className="font-medium text-gray-900">{row.original.id}</p>
+          <p className="font-medium text-gray-900">{row.original.orderId}</p>
         ),
       },
       {
@@ -46,21 +46,29 @@ const RecentBillingTable = ({
         ),
       },
       {
-        accessorKey: "plan",
+        accessorKey: "planName",
         header: "Plan",
-        cell: ({ row }) => <p className="text-gray-700">{row.original.plan}</p>,
+        cell: ({ row }) => (
+          <p className="text-gray-700">{row.original.planName}</p>
+        ),
       },
       {
         accessorKey: "amount",
         header: "Amount",
         cell: ({ row }) => (
-          <p className="text-gray-700 font-medium">${row.original.amount}</p>
+          <p className="text-gray-700 font-medium">
+            ${row.original.Amount?.toFixed(2) || "0.00"}
+          </p>
         ),
       },
       {
         accessorKey: "status",
         header: "Status",
-        cell: ({ row }) => <StatusBadge status={row.original.status} />,
+        cell: ({ row }) => (
+          <StatusBadge
+            status={row.original.status === "PAID" ? "Paid" : "UNPAID"}
+          />
+        ),
       },
     ],
     [],

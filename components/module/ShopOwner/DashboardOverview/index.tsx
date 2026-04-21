@@ -1,4 +1,7 @@
+"use client";
+
 import MetricCard from "@/components/shared/MetricCardDashboard";
+import { useGetDashboardOverviewQuery } from "@/redux/api/shopOwnerDashboardApi";
 import { Sparkles, UserMinus, Users } from "lucide-react";
 import ActiveUsersChart from "./ActiveUsersChart";
 import PerformanceTable from "./PerformanceTable";
@@ -6,29 +9,18 @@ import RecentBillingTable from "./RecentBillingTable";
 import TechnicianPerformance from "./technicianPerformance";
 
 const ShopOwnerDashboardOverview = () => {
-  const recentBilling = [
-    {
-      id: "ORD-001",
-      date: "2023-06-01",
-      plan: "Basic Plan",
-      amount: 49,
-      status: "Paid",
-    },
-    {
-      id: "ORD-002",
-      date: "2023-06-02",
-      plan: "Pro Plan",
-      amount: 99,
-      status: "UNPAID",
-    },
-    {
-      id: "ORD-003",
-      date: "2023-06-03",
-      plan: "Enterprise",
-      amount: 199,
-      status: "Paid",
-    },
-  ];
+  const { data: dashboardData, isLoading } = useGetDashboardOverviewQuery({});
+
+  const dashboard = dashboardData?.data || {};
+
+  const activeTechnicians = dashboard?.activeTechnicians;
+  const activeInvitations = dashboard?.activeInvitations;
+  const activePlan = dashboard?.activePlan;
+  const diagnosticsActivity = dashboard?.diagnosticsActivity ?? [];
+  const recentBilling = dashboard?.recentBilling ?? [];
+  const technicianPerformance = dashboard?.technicianPerformance;
+  const technicians = dashboard?.technicians ?? [];
+
   const performanceTable = [
     {
       id: "1",
@@ -53,26 +45,39 @@ const ShopOwnerDashboardOverview = () => {
   const metrics = [
     {
       title: "Active Technicians",
-      value: 30,
-      month: "+2 this month",
+      value: activeTechnicians?.count ?? 0,
+      month: activeTechnicians?.subtitle,
       icon: <Users className="text-[#00C566]" />,
       bg: "bg-[#e6f9f0]",
     },
     {
       title: "Active Invitations",
-      value: 0,
-      invitations: "Remaining Invitations",
+      value: activeInvitations?.sent ?? 0,
+      invitations: activeInvitations?.remaining ?? 0,
       icon: <UserMinus className="text-[#1B64F6]" />,
       bg: "bg-[#F0F5FF]",
     },
     {
       title: "Active Plan",
-      plan: "Professional Shop Plan",
-      nextRenewal: "Oct 21",
+      plan: activePlan?.name ?? "N/A",
+      nextRenewal: activePlan?.nextRenewal
+        ? new Date(activePlan.nextRenewal).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          })
+        : "N/A",
       icon: <Sparkles className="text-[#F5CC1D]" />,
       bg: "bg-[#fdf9e8]",
     },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex h-64 items-center justify-center text-slate-400">
+        Loading dashboard...
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -84,12 +89,14 @@ const ShopOwnerDashboardOverview = () => {
 
       <div className="grid gap-6 lg:grid-cols-4 mt-4">
         <div className="lg:col-span-2 bg-[#f3f5f7] rounded-2xl">
-          <ActiveUsersChart />
+          <ActiveUsersChart diagnosticsActivity={diagnosticsActivity} />
           <RecentBillingTable recentCompletedJobs={recentBilling} />
         </div>
 
         <div className="lg:col-span-2 bg-[#f3f5f7]">
-          <TechnicianPerformance />
+          <TechnicianPerformance
+            technicianPerformance={technicianPerformance}
+          />
           <PerformanceTable performanceTable={performanceTable} />
         </div>
       </div>

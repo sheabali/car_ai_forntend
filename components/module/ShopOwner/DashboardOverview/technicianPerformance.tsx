@@ -9,43 +9,39 @@ import {
 } from "@/components/ui/select";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-const COLORS = ["#3B82F6", "#7C3AED", "#FCD34D", "#F97316"];
-
-const chartData = [
-  { name: "Alice Johnson", value: 14, color: "#3B82F6" },
-  { name: "James Wilson", value: 6, color: "#7C3AED" },
-  { name: "Daniel Carter", value: 5, color: "#FCD34D" },
+const COLORS = [
+  "#F59E0B",
+  "#3B82F6",
+  "#10B981",
+  "#8B5CF6",
+  "#EF4444",
+  "#EC4899",
 ];
 
-const technicians = [
-  {
-    id: 1,
-    name: "Alice Johnson",
-    email: "alice.j@gmail.com",
-    sessions: 14,
-    color: "text-red-600",
-  },
-  {
-    id: 2,
-    name: "Daniel Carter",
-    email: "daniel.c@gmail.com",
-    sessions: 5,
-    color: "text-red-600",
-  },
-  {
-    id: 3,
-    name: "James Wilson",
-    email: "james.w@gmail.com",
-    sessions: 6,
-    color: "text-red-600",
-  },
-];
+export default function TechnicianPerformance({
+  technicianPerformance,
+}: {
+  technicianPerformance: {
+    total: number;
+    data: {
+      id: string;
+      fullName: string;
+      email: string;
+      profileImage: string;
+      sessions: number;
+    }[];
+  };
+}) {
+  const chartData = technicianPerformance.data.map((tech, index) => ({
+    name: tech.fullName,
+    value: tech.sessions,
+    color: COLORS[index % COLORS.length],
+  }));
 
-const totalSessions = technicians.reduce((sum, tech) => sum + tech.sessions, 0);
+  const totalSessions = technicianPerformance.total;
 
-export default function TechnicianPerformance() {
   return (
-    <div className=" bg-white p-7 rounded-2xl">
+    <div className="bg-white p-7 rounded-2xl">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -66,7 +62,7 @@ export default function TechnicianPerformance() {
         </div>
 
         {/* Chart Card */}
-        <div className=" p-8 bg-white">
+        <div className="p-8 bg-white">
           <div className="flex justify-center items-center min-h-80">
             <div className="relative w-80 h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -103,11 +99,14 @@ export default function TechnicianPerformance() {
               </div>
             </div>
 
-            {/* Legend with tooltip */}
+            {/* Legend */}
             <div className="ml-12">
               {chartData.map((item, index) => (
                 <div key={index} className="mb-4">
-                  <div className="bg-amber-400 text-white px-3 py-2 rounded text-sm font-medium inline-block">
+                  <div
+                    className="text-white px-3 py-2 rounded text-sm font-medium inline-block"
+                    style={{ backgroundColor: item.color }}
+                  >
                     <div>{item.value} sessions</div>
                     <div className="text-xs font-normal">{item.name}</div>
                   </div>
