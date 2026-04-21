@@ -77,7 +77,7 @@ export function SuccessModal({ open, onClose }: SuccessModalProps) {
           onClick={handleGoToDashboard}
           className="w-full bg-[#042055] text-white hover:bg-[#042055]/20 font-semibold py-2"
         >
-          Go to Home
+          Go to dashboard
         </Button>
       </div>
     </div>

@@ -32,11 +32,14 @@ export default function HeroSection() {
       {/* HERO */}
       <div className="relative flex flex-col items-center justify-center px-4 pt-16 md:pt-24 pb-16 md:pb-24 text-center">
         <div className="relative z-10 max-w-5xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[64px] leading-tight text-[#14261C] font-semibold my-6 md:my-8">
+          <h1 className="text-2xl md:text-5xl lg:text-[64px] leading-tight text-[#14261C] font-semibold my-6 md:my-8">
             Diagnose Vehicle
             <br />
             <span className="block">
-              <FlipWords className="text-[#888888] text-5xl" words={diagnose} />
+              <FlipWords
+                className="text-[#888888] text-xl md:text-5xl"
+                words={diagnose}
+              />
             </span>
           </h1>
 

@@ -7,8 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRegisterMutation } from "@/redux/api/authApi";
+import { useLoginMutation, useRegisterMutation } from "@/redux/api/authApi";
+import { setUser } from "@/redux/features/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { setCookie } from "@/src/utils/cookies";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { jwtDecode } from "jwt-decode";
 import {
   Eye,
   EyeOff,
@@ -54,8 +58,10 @@ type ShopSetupFormData = z.infer<typeof shopSetupSchema>;
 
 function ShopSetupContent() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const [createUser, { isLoading }] = useRegisterMutation();
+  const [makeLogin, { isLoading: isLoginLoading }] = useLoginMutation();
 
   const { data, updateData } = useOnboarding();
   const [showPassword, setShowPassword] = useState(false);
@@ -97,6 +103,21 @@ function ShopSetupContent() {
         toast.success(
           "Registration successful! Please select a plan to continue.",
         );
+
+        const loginRes = (await makeLogin({
+          email: formData.email,
+          password: formData.password,
+        }).unwrap()) as any;
+
+        if (loginRes?.success) {
+          const token = loginRes.data.token;
+
+          setCookie(token);
+
+          const user = jwtDecode<any>(token);
+
+          dispatch(setUser({ token, user }));
+        }
 
         router.push("/register/plan-selection");
       }

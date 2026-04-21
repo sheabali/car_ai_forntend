@@ -126,12 +126,12 @@ export default function LoginPage() {
             </h1>
             <p className="text-[#4B5563] text-[16px]">
               Don&apos;t have an account?{" "}
-              <a
-                href="#"
+              <Link
+                href="/register"
                 className="text-[#4B5563] font-semibold hover:text-[#4B5563]/80"
               >
                 Sign Up
-              </a>
+              </Link>
             </p>
           </div>
 
