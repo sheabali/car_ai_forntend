@@ -21,26 +21,26 @@ const ShopOwnerDashboardOverview = () => {
   const technicianPerformance = dashboard?.technicianPerformance;
   const technicians = dashboard?.technicians ?? [];
 
-  const performanceTable = [
-    {
-      id: "1",
-      technicianName: "John Doe",
-      emailAddress: "ko1E1@example.com",
-      sessions: "2023-06-01",
-    },
-    {
-      id: "1",
-      technicianName: "John Doe",
-      emailAddress: "ko1E1@example.com",
-      sessions: "2023-06-01",
-    },
-    {
-      id: "1",
-      technicianName: "John Doe",
-      emailAddress: "ko1E1@example.com",
-      sessions: "2023-06-01",
-    },
-  ];
+  // const performanceTable = [
+  //   {
+  //     id: "1",
+  //     technicianName: "John Doe",
+  //     emailAddress: "ko1E1@example.com",
+  //     sessions: "2023-06-01",
+  //   },
+  //   {
+  //     id: "1",
+  //     technicianName: "John Doe",
+  //     emailAddress: "ko1E1@example.com",
+  //     sessions: "2023-06-01",
+  //   },
+  //   {
+  //     id: "1",
+  //     technicianName: "John Doe",
+  //     emailAddress: "ko1E1@example.com",
+  //     sessions: "2023-06-01",
+  //   },
+  // ];
 
   const metrics = [
     {
@@ -90,14 +90,16 @@ const ShopOwnerDashboardOverview = () => {
       <div className="grid gap-6 lg:grid-cols-4 mt-4">
         <div className="lg:col-span-2 bg-[#f3f5f7] rounded-2xl">
           <ActiveUsersChart diagnosticsActivity={diagnosticsActivity} />
-          <RecentBillingTable recentCompletedJobs={recentBilling} />
+          <RecentBillingTable
+            recentCompletedJobs={recentBilling.slice(0, 5) || []}
+          />
         </div>
 
         <div className="lg:col-span-2 bg-[#f3f5f7]">
           <TechnicianPerformance
             technicianPerformance={technicianPerformance}
           />
-          <PerformanceTable performanceTable={performanceTable} />
+          <PerformanceTable performanceTable={technicians?.slice(0, 5) || []} />
         </div>
       </div>
     </div>

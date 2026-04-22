@@ -1,38 +1,43 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { RWTable } from "@/components/ui/core/NRTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 
-const PerformanceTable = ({ performanceTable }: { performanceTable: any }) => {
-  const columns = useMemo<ColumnDef<any>[]>(
+interface Technician {
+  id: string;
+  fullName: string;
+  email: string;
+  profileImage: string;
+  totalSessions: number;
+}
+
+interface PerformanceTableProps {
+  performanceTable: Technician[];
+}
+
+const PerformanceTable = ({ performanceTable }: PerformanceTableProps) => {
+  const columns = useMemo<ColumnDef<Technician>[]>(
     () => [
       {
-        accessorKey: "technicianName",
+        accessorKey: "fullName",
         header: "Technician Name",
         cell: ({ row }) => (
-          <p className="font-medium text-gray-900">
-            {row.original.technicianName}
-          </p>
+          <p className="font-medium text-gray-900">{row.original.fullName}</p>
         ),
       },
       {
-        accessorKey: "emailAddress",
+        accessorKey: "email",
         header: "Email Address",
         cell: ({ row }) => (
-          <p className="text-gray-700">{row.original.emailAddress}</p>
+          <p className="text-gray-700">{row.original.email}</p>
         ),
       },
       {
         accessorKey: "sessions",
         header: "Sessions",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">
-            {row.original.sessions
-              ? new Date(row.original.sessions).toLocaleDateString()
-              : "N/A"}
-          </p>
+          <p className="text-sm text-gray-700">{row.original?.totalSessions}</p>
         ),
       },
     ],
