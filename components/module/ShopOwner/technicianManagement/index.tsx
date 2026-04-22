@@ -1,6 +1,8 @@
 "use client";
 
 import MetricCard from "@/components/shared/MetricCardDashboard";
+
+import PageLoading from "@/components/shared/PageLoading";
 import { RWTable } from "@/components/ui/core/NRTable";
 import { useGetTechniciansManagementStatsQuery } from "@/redux/api/shopOwnerDashboardApi";
 import { ColumnDef } from "@tanstack/react-table";
@@ -120,6 +122,14 @@ const TechnicianManagement = () => {
     ],
     [],
   );
+
+  if (managementStatsLoading) {
+    return (
+      <div>
+        <PageLoading />
+      </div>
+    );
+  }
 
   return (
     <div>

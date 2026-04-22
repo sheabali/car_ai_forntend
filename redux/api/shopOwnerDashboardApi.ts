@@ -40,6 +40,12 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         body: { status },
       }),
     }),
+    getBillingData: builder.query({
+      query: () => ({
+        url: "/billing/management",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -50,4 +56,5 @@ export const {
   useGetTechniciansManagementStatsQuery,
   useBillingManagementQuery,
   useUpdateTechnicianStatusMutation,
+  useGetBillingDataQuery,
 } = shopOwnerDashboardApi;
