@@ -1,11 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  useAddTechnicianMutation,
+  useGetTechniciansLimitInfoQuery,
+} from "@/redux/api/shopOwnerDashboardApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const technicianSchema = z.object({
@@ -17,6 +24,13 @@ const technicianSchema = z.object({
 type TechnicianFormData = z.infer<typeof technicianSchema>;
 
 export default function AddTechnicianPage() {
+  const { data: limitInfoData } = useGetTechniciansLimitInfoQuery({});
+  const [makeInvitation, { isLoading }] = useAddTechnicianMutation();
+
+  const limitInfo = limitInfoData?.data;
+
+  console.log("limitInfo", limitInfo);
+
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -27,15 +41,29 @@ export default function AddTechnicianPage() {
     resolver: zodResolver(technicianSchema),
   });
 
-  const onSubmit = (data: TechnicianFormData) => {
-    console.log("Sending invitation to:", data);
+  const onSubmit = async (data: TechnicianFormData) => {
+    const payload = {
+      fullName: data.name,
+      email: data.email,
+      passkey: data.passkey,
+    };
+
+    try {
+      const res = await makeInvitation(payload).unwrap();
+
+      toast.success(res.message || "Invitation sent successfully!");
+    } catch (error: any) {
+      console.error("Failed to send invitation:", error);
+
+      toast.error(error?.data?.message || "Failed to send invitation.");
+    }
+
     reset();
   };
-
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-white rounded-lg p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-8">
+        <h1 className="text-[32px] font-bold text-gray-900 mb-8">
           Add Technician
         </h1>
 
@@ -51,7 +79,7 @@ export default function AddTechnicianPage() {
                 type="text"
                 placeholder="Enter technician name"
                 {...register("name")}
-                className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="pl-10 border-gray-300 py-6 focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
             {errors.name && (
@@ -70,7 +98,7 @@ export default function AddTechnicianPage() {
                 type="email"
                 placeholder="Enter technician email address"
                 {...register("email")}
-                className="pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="pl-10 border-gray-300 py-6 focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
             {errors.email && (
@@ -91,7 +119,7 @@ export default function AddTechnicianPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Create technician passkey"
                 {...register("passkey")}
-                className="pl-10 pr-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                className="pl-10 pr-10 border-gray-300 py-6 focus:border-blue-500 focus:ring-blue-500"
               />
               <button
                 type="button"
@@ -112,18 +140,17 @@ export default function AddTechnicianPage() {
             )}
           </div>
 
-          {/* Send Invitation Button */}
           <Button
             type="submit"
-            className="w-full bg-blue-900 hover:bg-blue-800 text-white font-medium py-3 rounded-lg mt-8"
+            disabled={isLoading}
+            className="w-full bg-blue-900 hover:bg-blue-800 text-white font-medium py-6 rounded-lg mt-8"
           >
-            Send Invitation
+            {isLoading ? <Loading /> : "Send Invitation"}
           </Button>
 
-          {/* Invitation Remaining Message */}
           <div className="bg-red-50 rounded-lg p-4 mt-6">
             <p className="text-red-600 text-center text-sm font-medium">
-              You have 1 invitation remaining
+              You have {limitInfo?.[0]?.remaining} invitation remaining
             </p>
           </div>
         </form>

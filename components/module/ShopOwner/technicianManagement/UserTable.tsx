@@ -1,38 +1,49 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { RWTable } from "@/components/ui/core/NRTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 
-type UserStatus = "Paid" | "UNPAID";
+type UserStatus = "ACTIVE" | "INVITED" | "SUSPENDED" | "BLOCKED";
 
 const statusStyles: Record<UserStatus, string> = {
-  Paid: "bg-green-100 text-green-600 border-green-200",
-  UNPAID: "bg-red-100 text-red-600 border-red-200",
+  ACTIVE: "bg-green-100 text-green-600 border-green-200",
+  INVITED: "bg-blue-100 text-blue-600 border-blue-200",
+  SUSPENDED: "bg-yellow-100 text-yellow-600 border-yellow-200",
+  BLOCKED: "bg-red-100 text-red-600 border-red-200",
 };
 
 const StatusBadge = ({ status }: { status: UserStatus }) => (
   <span
     className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
   >
-    {status === "Paid" ? "PAID" : "UNPAID"}
+    {status}
   </span>
 );
 
-const TechniciansTable = ({ technicians }: { technicians: any }) => {
-  const columns = useMemo<ColumnDef<any>[]>(
+type Technician = {
+  id: string;
+  fullName: string;
+  email: string;
+  passkey: string;
+  status: UserStatus;
+  totalSessions: number;
+  createdAt: string;
+};
+
+const TechniciansTable = ({ technicians }: { technicians: Technician[] }) => {
+  const columns = useMemo<ColumnDef<Technician>[]>(
     () => [
       {
         accessorKey: "id",
         header: "Order ID",
       },
       {
-        accessorKey: "technicianName",
+        accessorKey: "fullName", // was: technicianName
         header: "Technician Name",
       },
       {
-        accessorKey: "emailAddress",
+        accessorKey: "email", // was: emailAddress
         header: "Email / Plan",
       },
       {
@@ -40,16 +51,16 @@ const TechniciansTable = ({ technicians }: { technicians: any }) => {
         header: "Passkey",
       },
       {
-        accessorKey: "activationDate",
+        accessorKey: "createdAt", // was: activationDate
         header: "Activation Date",
         cell: ({ row }) => (
           <p className="text-sm text-gray-700">
-            {new Date(row.original.activationDate).toLocaleDateString()}
+            {new Date(row.original.createdAt).toLocaleDateString()}
           </p>
         ),
       },
       {
-        accessorKey: "sessions",
+        accessorKey: "totalSessions",
         header: "Sessions",
       },
       {

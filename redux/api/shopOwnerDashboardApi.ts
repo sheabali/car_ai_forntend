@@ -8,7 +8,46 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    addTechnician: builder.mutation({
+      query: (data) => ({
+        url: "/technicians/add",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    getTechniciansLimitInfo: builder.query({
+      query: () => ({
+        url: "/technicians/limit-info",
+        method: "GET",
+      }),
+    }),
+    getTechniciansManagementStats: builder.query({
+      query: () => ({
+        url: "/technicians/management-stats",
+        method: "GET",
+      }),
+    }),
+    billingManagement: builder.query({
+      query: () => ({
+        url: "/billing/management",
+        method: "GET",
+      }),
+    }),
+    UpdateTechnicianStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/technicians/status/${id}`,
+        method: "PATCH",
+        body: { status },
+      }),
+    }),
   }),
 });
 
-export const { useGetDashboardOverviewQuery } = shopOwnerDashboardApi;
+export const {
+  useGetDashboardOverviewQuery,
+  useAddTechnicianMutation,
+  useGetTechniciansLimitInfoQuery,
+  useGetTechniciansManagementStatsQuery,
+  useBillingManagementQuery,
+  useUpdateTechnicianStatusMutation,
+} = shopOwnerDashboardApi;

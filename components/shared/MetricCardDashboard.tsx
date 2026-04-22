@@ -21,6 +21,8 @@ export default function MetricCard({
   plan,
   nextRenewal,
 }: MetricCardProps) {
+  console.log("invitations");
+
   return (
     <div className="flex items-start bg-card justify-between rounded-xl p-6">
       {/* Left: Text content */}
@@ -36,8 +38,8 @@ export default function MetricCard({
             </div>
           )}
 
-          {invitations && (
-            <div className="text-sm font-medium  bg-[#f0f5ff] text-[#1b64f6] rounded-full py-1 px-2">
+          {typeof invitations !== "undefined" && (
+            <div className="text-sm font-medium bg-[#f0f5ff] text-[#1b64f6] rounded-full py-1 px-2">
               {invitations} Remaining Invitations
             </div>
           )}
