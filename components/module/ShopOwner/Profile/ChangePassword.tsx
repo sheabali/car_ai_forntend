@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -21,7 +22,7 @@ import { Input } from "@/components/ui/input";
 import { useChangePasswordMutation } from "@/redux/api/authApi";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-// Validation Schema
+
 const formSchema = z
   .object({
     oldPassword: z
@@ -58,10 +59,6 @@ export default function ShopOwnerChangePasswordPage() {
   });
 
   const onSubmit = async (values: FormValues) => {
-    // Simulate API call
-
-    console.log("Password change request:", values);
-
     try {
       const res = (await changePassword(values).unwrap()) as any;
 
@@ -121,7 +118,6 @@ export default function ShopOwnerChangePasswordPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Old Password */}
               <FormField
                 control={form.control}
                 name="oldPassword"
@@ -143,7 +139,6 @@ export default function ShopOwnerChangePasswordPage() {
                 )}
               />
 
-              {/* New Password */}
               <FormField
                 control={form.control}
                 name="newPassword"
@@ -165,7 +160,6 @@ export default function ShopOwnerChangePasswordPage() {
                 )}
               />
 
-              {/* Confirm Password */}
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -201,7 +195,7 @@ export default function ShopOwnerChangePasswordPage() {
                   className="flex-1 bg-primary hover:bg-primary/90 py-6 font-semibold"
                   disabled={form.formState.isSubmitting}
                 >
-                  {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
+                  {isLoading ? <Loading /> : "Save Changes"}
                 </Button>
               </div>
             </form>

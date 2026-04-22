@@ -52,7 +52,6 @@ export default function ChangePasswordPage() {
   });
 
   const onSubmit = async (values: FormValues) => {
-    // Simulate API call
     console.log("Password change request:", values);
     alert("Password changed successfully! (Demo)");
     form.reset();
