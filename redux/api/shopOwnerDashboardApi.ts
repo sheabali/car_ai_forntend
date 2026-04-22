@@ -42,7 +42,7 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
     }),
     getBillingData: builder.query({
       query: () => ({
-        url: "/billing/management",
+        url: "/payment/my-payments",
         method: "GET",
       }),
     }),
