@@ -39,7 +39,6 @@ export default function PricingPage() {
   const { data: userData } = useGetMeQuery({}) as any;
 
   const isSubscribed = userData?.data?.isSubscribed;
-  console.log("isSubscribed", isSubscribed);
 
   const { data, isLoading } = useGetAllSubscriptionQuery({}) as any;
   const pricingPlans: SubscriptionPlan[] = data?.data || [];

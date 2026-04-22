@@ -46,6 +46,19 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getMySubscriptions: builder.query({
+      query: () => ({
+        url: "/payment/my-subscriptions",
+        method: "GET",
+      }),
+    }),
+    updateAutoRenew: builder.mutation({
+      query: ({ subscriptionId, value }) => ({
+        url: `/payment/subscription/${subscriptionId}/${value}`,
+        method: "PATCH",
+        body: { value },
+      }),
+    }),
   }),
 });
 
@@ -57,4 +70,6 @@ export const {
   useBillingManagementQuery,
   useUpdateTechnicianStatusMutation,
   useGetBillingDataQuery,
+  useUpdateAutoRenewMutation,
+  useGetMySubscriptionsQuery,
 } = shopOwnerDashboardApi;
