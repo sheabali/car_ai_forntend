@@ -1,55 +1,85 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useGetMeQuery } from "@/redux/api/authApi";
+import { useUpdateProfileMutation } from "@/redux/api/shopOwnerDashboardApi";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import ShopOwnerCardSkeleton from "./ShopOwnerCardSkeleton";
 
 interface FormValues {
-  adminName: string;
-  shopOwnerName: string;
+  fullName: string;
   email: string;
   shopName: string;
   shopAddress: string;
-  phoneNumber: string;
+  phone: string;
 }
 
 export default function ShopOwnerProfileCard() {
-  const { register, handleSubmit } = useForm<FormValues>({
-    defaultValues: {
-      shopOwnerName: "Shop Owner Name",
-      email: "example@example.com",
-      shopName: "Tesla Enterprise",
-      shopAddress: "shop address",
-      phoneNumber: "01737886719",
-    },
-  });
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+  const { data: getMeData, isLoading } = useGetMeQuery({}) as any;
+  const me = getMeData?.data;
 
-  const [imagePreview, setImagePreview] = useState<string>(
-    "https://images.unsplash.com/photo-1568316674077-d72ee56de61c?q=80&w=764&auto=format&fit=crop",
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Form Data:", data);
-    // API call here
+  const { register, handleSubmit, reset } = useForm<FormValues>();
+
+  useEffect(() => {
+    if (me) {
+      reset({
+        fullName: me.fullName ?? "",
+        shopName: me.shopName ?? "",
+        shopAddress: me.shopAddress ?? "",
+        phone: me.phone ?? "",
+      });
+      if (me.profileImage) {
+        setImagePreview(me.profileImage);
+      }
+    }
+  }, [me, reset]);
+
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const formData = new FormData();
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      formData.append("data", JSON.stringify(data));
+
+      await updateProfile(formData).unwrap();
+      toast.success("Profile updated successfully!");
+    } catch (error: any) {
+      console.error("Update failed:", error);
+      toast.error(error?.data?.message || "Failed to update profile.");
+    }
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
+  if (isLoading) return <ShopOwnerCardSkeleton />;
+
   return (
     <Card className="max-w-2xl border-0 mx-auto p-6">
-      {/* Profile Image */}
       <div className="flex gap-6 items-center space-y-4">
-        <div className="relative w-24 h-24 rounded-full overflow-hidden">
+        <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
           {imagePreview ? (
             <Image
               src={imagePreview}
@@ -58,13 +88,14 @@ export default function ShopOwnerProfileCard() {
               className="object-cover"
             />
           ) : (
-            <User className="w-24 h-24 text-gray-300" />
+            <User className="w-12 h-12 text-gray-300" />
           )}
         </div>
 
         <label className="cursor-pointer bg-[#ebeaf1] text-[#4F5655] font-bold px-4 py-2 rounded text-sm hover:bg-gray-300">
           Upload new Image
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleImageChange}
@@ -76,32 +107,29 @@ export default function ShopOwnerProfileCard() {
       {/* Form */}
       <CardContent className="mt-6 border p-6 rounded-2xl">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Shop Owner Name */}
           <div>
             <label className="block text-sm font-semibold mb-2">
-              Shop Owner Name
+              Full Name
             </label>
             <Input
-              {...register("shopOwnerName")}
+              {...register("fullName")}
               className="py-6"
-              placeholder="Enter shop owner name"
+              placeholder="Enter full name"
             />
           </div>
 
-          {/* Email */}
           <div>
             <label className="block text-sm font-semibold mb-2">
               Email Account
             </label>
-            <Input
+            {/* <Input
               type="email"
               {...register("email")}
               className="py-6"
               placeholder="Enter email"
-            />
+            /> */}
           </div>
 
-          {/* Shop Name */}
           <div>
             <label className="block text-sm font-semibold mb-2">
               Shop Name
@@ -113,7 +141,6 @@ export default function ShopOwnerProfileCard() {
             />
           </div>
 
-          {/* Shop Address */}
           <div>
             <label className="block text-sm font-semibold mb-2">
               Shop Address
@@ -125,28 +152,26 @@ export default function ShopOwnerProfileCard() {
             />
           </div>
 
-          {/* Phone Number */}
           <div>
             <label className="block text-sm font-semibold mb-2">
               Phone Number
             </label>
             <Input
               type="tel"
-              {...register("phoneNumber")}
+              {...register("phone")}
               className="py-6"
               placeholder="Enter phone number"
             />
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-start gap-2 mt-5">
             <Link href="/shop-owner/dashboard/profile">
               <Button className="py-4" type="button" variant="secondary">
                 Cancel
               </Button>
             </Link>
-            <Button className="py-4" type="submit">
-              Save Changes
+            <Button className="py-4" type="submit" disabled={isUpdating}>
+              {isUpdating ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>

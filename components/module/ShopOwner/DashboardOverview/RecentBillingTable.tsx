@@ -57,7 +57,7 @@ const RecentBillingTable = ({
         header: "Amount",
         cell: ({ row }) => (
           <p className="text-gray-700 font-medium">
-            ${row.original.Amount?.toFixed(2) || "0.00"}
+            ${row.original.amount?.toFixed(2) || "0.00"}
           </p>
         ),
       },

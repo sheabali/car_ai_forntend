@@ -52,11 +52,26 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+
     updateAutoRenew: builder.mutation({
       query: ({ subscriptionId, value }) => ({
         url: `/payment/subscription/${subscriptionId}/${value}`,
         method: "PATCH",
         body: { value },
+      }),
+    }),
+    updateProfile: builder.mutation({
+      query: (data) => ({
+        url: "/users/update-profile",
+        method: "PUT",
+        body: data,
+      }),
+    }),
+    changePassword: builder.mutation({
+      query: (data) => ({
+        url: "/auth/change-password",
+        method: "PUT",
+        body: data,
       }),
     }),
   }),
@@ -72,4 +87,6 @@ export const {
   useGetBillingDataQuery,
   useUpdateAutoRenewMutation,
   useGetMySubscriptionsQuery,
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
 } = shopOwnerDashboardApi;

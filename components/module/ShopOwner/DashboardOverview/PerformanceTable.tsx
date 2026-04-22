@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 
 interface Technician {
+  sessions: string;
   id: string;
   fullName: string;
   email: string;
@@ -37,7 +38,7 @@ const PerformanceTable = ({ performanceTable }: PerformanceTableProps) => {
         accessorKey: "sessions",
         header: "Sessions",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">{row.original?.totalSessions}</p>
+          <p className="text-sm text-gray-700">{row.original?.sessions}</p>
         ),
       },
     ],

@@ -19,7 +19,10 @@ const ShopOwnerDashboardOverview = () => {
   const diagnosticsActivity = dashboard?.diagnosticsActivity ?? [];
   const recentBilling = dashboard?.recentBilling ?? [];
   const technicianPerformance = dashboard?.technicianPerformance;
-  const technicians = dashboard?.technicians ?? [];
+  const technicians = dashboard?.technicianPerformance ?? [];
+  const totalSessions = technicians?.data ?? 0;
+
+  console.log("technicianPerformance", technicianPerformance);
 
   // const performanceTable = [
   //   {
@@ -99,7 +102,7 @@ const ShopOwnerDashboardOverview = () => {
           <TechnicianPerformance
             technicianPerformance={technicianPerformance}
           />
-          <PerformanceTable performanceTable={technicians?.slice(0, 5) || []} />
+          <PerformanceTable performanceTable={totalSessions} />
         </div>
       </div>
     </div>
