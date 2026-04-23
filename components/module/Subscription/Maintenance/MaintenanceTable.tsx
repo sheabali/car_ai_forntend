@@ -160,7 +160,6 @@ const SubscriptionTable = () => {
           <RWTable columns={columns} data={subscriptions} />
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <TablePagination
             totalPage={totalPages}

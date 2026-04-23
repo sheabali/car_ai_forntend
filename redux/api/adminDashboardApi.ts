@@ -8,6 +8,7 @@ export const adminDashboardApi = baseApi.injectEndpoints({
         url: "/admin/dashboard",
         method: "GET",
       }),
+      providesTags: ["Admin"],
     }),
 
     getAllShops: builder.query({
@@ -16,6 +17,7 @@ export const adminDashboardApi = baseApi.injectEndpoints({
         method: "GET",
         params: { page, limit, category, status },
       }),
+      providesTags: ["Admin"],
     }),
 
     updateProfile: builder.mutation({
@@ -24,6 +26,7 @@ export const adminDashboardApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["ShopOwner"],
     }),
     changePassword: builder.mutation({
       query: (data) => ({
@@ -31,27 +34,28 @@ export const adminDashboardApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["ShopOwner"],
     }),
 
     getAllPlans: builder.query<
       unknown,
       { page?: number; limit?: number } | void
     >({
-      query: (args) => ({
+      query: () => ({
         url: "/plans",
         method: "GET",
-        params: { page: args?.page ?? 1, limit: args?.limit ?? 10 },
+        // params: { page: args?.page ?? 1, limit: args?.limit ?? 10 },
       }),
+      providesTags: ["ShopOwner"],
     }),
-    // adminDashboardApi.ts
 
     updatePlan: builder.mutation<void, { id: string; body: Partial<any> }>({
       query: ({ id, body }) => ({
-        url: `/plans/${id}`, // ← make sure id is destructured HERE
+        url: `/plans/${id}`,
         method: "PATCH",
         body,
       }),
-      // invalidatesTags: ["Plans"],
+      invalidatesTags: ["ShopOwner"],
     }),
     getAllSubscriptions: builder.query({
       query: ({ page = 1, limit = 10, category, status }) => ({
@@ -59,6 +63,7 @@ export const adminDashboardApi = baseApi.injectEndpoints({
         method: "GET",
         params: { page, limit, category, status },
       }),
+      providesTags: ["ShopOwner"],
     }),
   }),
 });

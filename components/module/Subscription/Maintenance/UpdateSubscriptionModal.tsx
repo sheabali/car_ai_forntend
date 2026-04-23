@@ -47,7 +47,7 @@ interface PlanData {
 interface UpdateSubscriptionModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  data?: PlanData;
+  data?: any;
 }
 
 const ALL_FEATURES = [

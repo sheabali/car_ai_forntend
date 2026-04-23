@@ -1,17 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 interface IUser {
   id: string;
   email: string;
-  role: "ADMIN" | "USER" | string;
+  role: string;
 }
 
-const roleBasedRoutes: Record<string, string[]> = {
-  "/admin": ["ADMIN"],
-  "/user": ["USER", "ADMIN"],
-};
+const roleBasedRoutes = ["/", "/admin/dashboard", "/user/dashboard"];
 
-const publicRoutes = [
+const authRoutes = [
   "/login",
   "/register",
   "/forgot-password",
@@ -20,56 +17,37 @@ const publicRoutes = [
 
 export async function proxy(request: NextRequest) {
   const accessToken = request.cookies.get("token")?.value;
-  const { pathname } = request.nextUrl;
+  // const refreshToken = request.cookies.get("refreshToken")?.value;
+  // console.log("accessToken", accessToken, "refreshToken", refreshToken);
 
-  const user: IUser | null = null;
+  // const { pathname } = request.nextUrl;
 
-  // if (!accessToken) {
-  //   if (publicRoutes.includes(pathname)) {
-  //     return NextResponse.next();
-  //   }
+  // if (!accessToken && !refreshToken && !authRoutes.includes(pathname)) {
   //   return NextResponse.redirect(
   //     new URL(`/login?redirect=${pathname}`, request.url),
   //   );
   // }
 
-  // // 2. Token decode
-  // try {
-  //   user = decodeJwt(accessToken) as IUser;
-  // } catch {
-  //   return NextResponse.redirect(
-  //     new URL(`/login?redirect=${pathname}`, request.url),
-  //   );
-  // }
+  // let user: IUser | null = null;
 
-  // if (user && publicRoutes.includes(pathname)) {
-  //   return NextResponse.redirect(new URL("/", request.url));
-  // }
-
-  // // 4. Role-based route check
-  // if (user) {
-  //   const matchedRouteKey = Object.keys(roleBasedRoutes).find((route) =>
-  //     pathname.startsWith(route),
-  //   );
-
-  //   if (matchedRouteKey) {
-  //     const allowedRoles = roleBasedRoutes[matchedRouteKey];
-
-  //     const userRole = user.role?.toUpperCase();
-  //     if (!allowedRoles.includes(userRole)) {
-  //       return NextResponse.redirect(new URL("/unauthorized", request.url));
-  //     }
+  // if (accessToken) {
+  //   try {
+  //     user = decodeJwt(accessToken);
+  //     console.log({ proxyts: user });
+  //   } catch (error) {
+  //     console.log("error", error);
+  //     return NextResponse.redirect(
+  //       new URL(`/login?redirect=${pathname}`, request.url),
+  //     );
   //   }
   // }
 
-  return NextResponse.next();
+  // return NextResponse.redirect(new URL("/", request.url));
 }
 
 export const config = {
   matcher: [
-    "/",
-    "/admin/:path*",
-    "/user/:path*",
+    "/about/:path*",
     "/login",
     "/register",
     "/forgot-password",

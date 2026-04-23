@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { RWTable } from "@/components/ui/core/NRTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { UpdateSubscriptionModal } from "./UpdateSubscriptionModal";
 
 type UserStatus = "Paid" | "UNPAID";
 
@@ -20,51 +22,57 @@ const StatusBadge = ({ status }: { status: UserStatus }) => (
   </span>
 );
 
-const SubscriptionTable = ({
-  recentCompletedJobs,
-}: {
-  recentCompletedJobs: any;
-}) => {
+const SubscriptionTable = ({ maintenance }: { maintenance: any }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
+
   const columns = useMemo<ColumnDef<any>[]>(
     () => [
       {
-        accessorKey: "shopName",
-        header: "Shop Name",
-        cell: ({ row }) => (
-          <p className="text-gray-700">{row.original.shopName}</p>
-        ),
-      },
-      {
-        accessorKey: "orderId",
-        header: "Order ID",
-        cell: ({ row }) => (
-          <p className="font-medium text-gray-900">{row.original.orderId}</p>
-        ),
-      },
-      {
         accessorKey: "plan",
         header: "Plan",
+        cell: ({ row }) => <p className="text-gray-700">{row.original.plan}</p>,
+      },
+      {
+        accessorKey: "price",
+        header: "Price",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">{row.original.plan}</p>
+          <p className="font-medium text-gray-900">{row.original.price}</p>
         ),
       },
       {
-        accessorKey: "billingCycle",
-        header: "Billing Cycle",
+        accessorKey: "technician",
+        header: "Technician",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">{row.original.billingCycle}</p>
+          <p className="text-sm text-gray-700">{row.original.technician}</p>
+        ),
+      },
+      {
+        accessorKey: "duration",
+        header: "Duration",
+        cell: ({ row }) => (
+          <p className="text-sm text-gray-700">{row.original.duration}</p>
         ),
       },
       {
         accessorKey: "status",
         header: "Status",
-        cell: ({ row }) => <StatusBadge status={row.original.status} />,
+        cell: ({ row }) => (
+          <StatusBadge status={row.original.status as UserStatus} />
+        ),
       },
       {
-        accessorKey: "paymentMethod",
-        header: "Payment Method",
+        id: "action",
+        header: "Action",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">{row.original.paymentMethod}</p>
+          <Button
+            onClick={() => {
+              setSelectedRow(row.original);
+              setModalOpen(true);
+            }}
+          >
+            Update Plan
+          </Button>
         ),
       },
     ],
@@ -72,17 +80,25 @@ const SubscriptionTable = ({
   );
 
   return (
-    <div className="rounded-xl bg-white shadow mt-4">
-      <div className="border-b p-4">
-        <h2 className="text-lg font-semibold text-gray-900">
-          Subscription & Billing
-        </h2>
+    <>
+      <div className="rounded-xl bg-white shadow mt-4">
+        <div className="border-b p-4">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Subscription & Billing
+          </h2>
+        </div>
+
+        <div className="pb-4 px-4">
+          <RWTable columns={columns} data={maintenance} />
+        </div>
       </div>
 
-      <div className="pb-4 px-4">
-        <RWTable columns={columns} data={recentCompletedJobs} />
-      </div>
-    </div>
+      <UpdateSubscriptionModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        data={selectedRow}
+      />
+    </>
   );
 };
 

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -18,8 +19,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useChangePasswordMutation } from "@/redux/api/authApi";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-// Validation Schema
 const formSchema = z
   .object({
     oldPassword: z
@@ -37,10 +40,14 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function ChangePasswordPage() {
+export default function ShopOwnerChangePasswordPage() {
+  const router = useRouter();
+
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [changePassword, { isLoading }] = useChangePasswordMutation();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,8 +59,19 @@ export default function ChangePasswordPage() {
   });
 
   const onSubmit = async (values: FormValues) => {
-    console.log("Password change request:", values);
-    alert("Password changed successfully! (Demo)");
+    try {
+      const res = (await changePassword(values).unwrap()) as any;
+
+      if (res.success) {
+        toast.success(res.message || "Password changed successfully");
+        router.push("/");
+      } else {
+        toast.error(res.message || "Failed to change password");
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "An error occurred");
+    }
+
     form.reset();
   };
 
@@ -98,7 +116,6 @@ export default function ChangePasswordPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* Old Password */}
               <FormField
                 control={form.control}
                 name="oldPassword"
@@ -120,7 +137,6 @@ export default function ChangePasswordPage() {
                 )}
               />
 
-              {/* New Password */}
               <FormField
                 control={form.control}
                 name="newPassword"
@@ -142,7 +158,6 @@ export default function ChangePasswordPage() {
                 )}
               />
 
-              {/* Confirm Password */}
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -178,7 +193,7 @@ export default function ChangePasswordPage() {
                   className="flex-1 bg-primary hover:bg-primary/90 py-6 font-semibold"
                   disabled={form.formState.isSubmitting}
                 >
-                  {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
+                  {isLoading ? <Loading /> : "Save Changes"}
                 </Button>
               </div>
             </form>

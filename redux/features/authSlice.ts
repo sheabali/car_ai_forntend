@@ -20,11 +20,11 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<{ token: string; user: any }>) => {
       state.token = action.payload.token;
       state.user = action.payload.user;
-      Cookies.set("accessToken", action.payload.token);
+      Cookies.set("token", action.payload.token);
     },
     setRefreshToken: (
       state,
-      action: PayloadAction<{ refresh_token: string }>
+      action: PayloadAction<{ refresh_token: string }>,
     ) => {
       state.refresh_token = action.payload.refresh_token;
       Cookies.set("refreshToken", action.payload.refresh_token);
@@ -33,7 +33,7 @@ const authSlice = createSlice({
       state.token = null;
       state.user = null;
       state.refresh_token = null;
-      Cookies.remove("accessToken");
+      Cookies.remove("token");
     },
   },
 });

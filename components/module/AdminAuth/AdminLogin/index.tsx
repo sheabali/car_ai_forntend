@@ -2,6 +2,7 @@
 "use client";
 
 import PHInput from "@/components/form/NRInput";
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/features/authSlice";
@@ -120,15 +121,13 @@ const AdminLogin = () => {
               </Link>
             </div>
 
-            <Link href="/admin/dashboard">
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-6 font-semibold"
-              >
-                {isLoading ? "Loading..." : "Login"}
-              </Button>
-            </Link>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-6 font-semibold"
+            >
+              {isLoading ? <Loading /> : "Login"}
+            </Button>
           </form>
         </FormProvider>
       </div>

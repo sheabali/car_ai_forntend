@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,6 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { logout } from "@/redux/features/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import {
   ChevronDown,
   CreditCard,
@@ -36,8 +39,6 @@ const adminNavItems = [
   },
 ];
 
-const role = "shop-owner";
-
 const userNavItems = [
   { title: "Dashboard", url: "/shop-owner/dashboard", icon: LayoutDashboard },
   {
@@ -57,15 +58,9 @@ const userNavItems = [
   },
 ];
 
-interface UserInfo {
-  name: string;
-  role: string;
-  avatarUrl?: string;
-}
-
 interface AppHeaderProps {
   role: "ADMIN" | "USER" | string;
-  user?: UserInfo;
+  user?: any;
   currentPath?: string;
   onResetPassword?: () => void;
   onLogout?: () => void;
@@ -74,13 +69,14 @@ interface AppHeaderProps {
 
 export default function AppHeader({
   role,
-  user = { name: "ADMIN", role: "USER" },
+  user,
   currentPath = "/admin/dashboard",
   onResetPassword,
   onLogout,
   onNavigate,
 }: AppHeaderProps) {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const navItems =
     role === "ADMIN" ? adminNavItems : role === "USER" ? userNavItems : [];
@@ -95,28 +91,43 @@ export default function AppHeader({
     setMobileOpen(false);
   };
 
-  const initials = user.name
+  // FIXED logout
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/admin-login");
+  };
+
+  const safeUser = {
+    name: user?.name || "Unknown",
+    role: user?.role || "",
+    profileImage: user?.profileImage || "",
+  };
+
+  const initials = safeUser.name
+    .trim()
     .split(" ")
-    .map((w) => w[0])
+    .filter(Boolean)
+    .map((w: string) => w[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
 
   return (
     <header className="sticky top-0 z-50 w-full">
-      <div className="mx-auto flex h-16  items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+        {/* Logo */}
         <div className="flex items-center gap-2 px-4 py-2 rounded-md">
           <Image
             src="/r_logo.png"
             alt="Logo"
             width={80}
             height={80}
-            className="size-auto "
+            className="size-auto"
           />
-          {/* <span className="text-lg font-bold">RegWheat</span> */}
         </div>
 
-        <nav className="hidden md:flex items-center bg-[#ffffff] py-2 px-2 rounded-full gap-1">
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center bg-white py-2 px-2 rounded-full gap-1">
           {navItems.map((item) => {
             const active = activePath === item.url;
             return (
@@ -127,7 +138,7 @@ export default function AppHeader({
                   "flex items-center gap-5 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-150",
                   active
                     ? "bg-[#042055] text-white shadow"
-                    : "text-[#000000] bg-[#e9f0ff] hover:bg-slate-100 hover:text-slate-900",
+                    : "text-black bg-[#e9f0ff] hover:bg-slate-100 hover:text-slate-900",
                 )}
               >
                 {item.title}
@@ -136,23 +147,31 @@ export default function AppHeader({
           })}
         </nav>
 
+        {/* Right Section */}
         <div className="flex items-center gap-2">
           {/* User Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none">
+              <button className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatarUrl} alt={user.name} />
+                  <AvatarImage
+                    src={safeUser.profileImage}
+                    alt={safeUser.name}
+                  />
                   <AvatarFallback className="bg-slate-300 text-slate-700 text-xs font-semibold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
+
                 <div className="hidden sm:flex flex-col items-start leading-tight">
                   <span className="text-sm font-semibold text-slate-800">
-                    {user.name}
+                    {safeUser.name}
                   </span>
-                  <span className="text-xs text-slate-500">{user.role}</span>
+                  <span className="text-xs text-slate-500">
+                    {safeUser.role}
+                  </span>
                 </div>
+
                 <ChevronDown className="h-4 w-4 text-slate-500 ml-0.5" />
               </button>
             </DropdownMenuTrigger>
@@ -162,20 +181,23 @@ export default function AppHeader({
               className="w-44 mt-1 rounded-xl shadow-lg border border-gray-100"
             >
               <Link
-                href={`${role === "ADMIN" ? "/admin/profile" : "/shop-owner/dashboard/profile"}`}
+                href={
+                  role === "ADMIN"
+                    ? "/admin/profile"
+                    : "/shop-owner/dashboard/profile"
+                }
               >
                 <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-slate-700 rounded-lg">
-                  {role === "ADMIN" ? (
-                    <User className="h-4 w-4" />
-                  ) : (
-                    <>Shop Owner</>
-                  )}{" "}
+                  <User className="h-4 w-4" />
                   Profile
                 </DropdownMenuItem>
               </Link>
+
               <DropdownMenuSeparator />
+
+              {/* FIXED: now using handleLogout */}
               <DropdownMenuItem
-                onClick={onLogout}
+                onClick={handleLogout}
                 className="flex items-center gap-2 cursor-pointer text-red-500 focus:text-red-500 focus:bg-red-50 rounded-lg"
               >
                 <LogOut className="h-4 w-4" />
@@ -184,7 +206,7 @@ export default function AppHeader({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Mobile Hamburger */}
+          {/* Mobile Menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button
@@ -193,50 +215,35 @@ export default function AppHeader({
                 className="md:hidden rounded-full"
               >
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
 
             <SheetContent side="left" className="w-72 p-0">
-              {/* Sheet Header */}
               <div className="flex items-center gap-2 border-b px-5 py-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-800 text-white">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    className="h-4 w-4"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
                 <span className="text-base font-semibold text-slate-800">
-                  SmartAutoTech<span className="text-blue-600"></span>
+                  SmartAutoTech
                 </span>
               </div>
 
-              {/* Mobile User */}
               <div className="flex items-center gap-3 border-b px-5 py-4 bg-slate-50">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={user.avatarUrl} alt={user.name} />
+                  <AvatarImage
+                    src={safeUser.profileImage}
+                    alt={safeUser.name}
+                  />
                   <AvatarFallback className="bg-slate-300 text-slate-700 text-sm font-semibold">
                     {initials}
                   </AvatarFallback>
                 </Avatar>
+
                 <div>
                   <p className="text-sm font-semibold text-slate-800">
-                    {user.name}
+                    {safeUser.name}
                   </p>
-                  <p className="text-xs text-slate-500">{user.role}</p>
+                  <p className="text-xs text-slate-500">{safeUser.role}</p>
                 </div>
               </div>
 
-              {/* Mobile Nav Items */}
               <nav className="flex flex-col gap-1 px-3 py-4">
                 {navItems.map((item) => {
                   const active = activePath === item.url;
@@ -258,24 +265,21 @@ export default function AppHeader({
                 })}
               </nav>
 
-              {/* Mobile Footer Actions */}
               <div className="absolute bottom-0 left-0 right-0 border-t px-3 py-4 flex flex-col gap-1 bg-white">
                 <button
                   onClick={() => {
                     onResetPassword?.();
                     setMobileOpen(false);
                   }}
-                  className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100"
                 >
                   <KeyRound className="h-4 w-4" />
                   Reset Password
                 </button>
+
                 <button
-                  onClick={() => {
-                    onLogout?.();
-                    setMobileOpen(false);
-                  }}
-                  className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50"
                 >
                   <LogOut className="h-4 w-4" />
                   Logout

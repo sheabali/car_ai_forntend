@@ -169,7 +169,9 @@ export default function AdminOtp() {
 
       if (res.success) {
         toast.success(res.message);
-        router.push(`/forgot-password/otp/change-password?email=${email}`);
+        router.push(
+          `/admin-forgot-password/otp/change-password?email=${email}`,
+        );
       } else {
         toast.error(res.message || "Failed to verify OTP");
       }
@@ -237,18 +239,13 @@ export default function AdminOtp() {
 
               {/* BUTTONS */}
               <div className="flex gap-4">
-                <Link
-                  href="/admin-forgot-password/otp/change-password"
-                  className="w-full"
+                <button
+                  type="submit"
+                  disabled={isVerifyingOtp || otpValues.some((v) => !v)}
+                  className="w-full bg-primary cursor-pointer text-white py-3 rounded-lg"
                 >
-                  <button
-                    type="submit"
-                    disabled={isVerifyingOtp || otpValues.some((v) => !v)}
-                    className="w-full bg-primary cursor-pointer text-white py-3 rounded-lg"
-                  >
-                    {isVerifyingOtp ? "Loading..." : "Verify OTP"}
-                  </button>
-                </Link>
+                  {isVerifyingOtp ? "Loading..." : "Verify OTP"}
+                </button>
 
                 <Link href="/forgot-password" className="w-full">
                   <Button variant="outline" className="w-full py-6">

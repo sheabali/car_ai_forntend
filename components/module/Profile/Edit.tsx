@@ -1,50 +1,85 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useGetMeQuery } from "@/redux/api/authApi";
+import { useUpdateProfileMutation } from "@/redux/api/shopOwnerDashboardApi";
 import { User } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import ShopOwnerCardSkeleton from "../ShopOwner/Profile/ShopOwnerCardSkeleton";
 
 interface FormValues {
-  adminName: string;
+  fullName: string;
+  email: string;
+  shopName: string;
+  shopAddress: string;
+  phone: string;
 }
 
-export default function ProfileCard() {
-  const { register, handleSubmit } = useForm<FormValues>({
-    defaultValues: {
-      adminName: "Gavano",
-    },
-  });
+export default function ShopOwnerProfileCard() {
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+  const { data: getMeData, isLoading } = useGetMeQuery({}) as any;
+  const me = getMeData?.data;
 
-  const [imagePreview, setImagePreview] = useState<string>(
-    "https://images.unsplash.com/photo-1568316674077-d72ee56de61c?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  console.log("imagePreview", imagePreview);
+  const { register, handleSubmit, reset } = useForm<FormValues>();
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Form Data:", data);
-    // handle your API request here
+  useEffect(() => {
+    if (me) {
+      reset({
+        fullName: me.fullName ?? "",
+        shopName: me.shopName ?? "",
+        shopAddress: me.shopAddress ?? "",
+        phone: me.phone ?? "",
+      });
+      if (me.profileImage) {
+        setImagePreview(me.profileImage);
+      }
+    }
+  }, [me, reset]);
+
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const formData = new FormData();
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
+      formData.append("data", JSON.stringify(data));
+
+      await updateProfile(formData).unwrap();
+      toast.success("Profile updated successfully!");
+    } catch (error: any) {
+      console.error("Update failed:", error);
+      toast.error(error?.data?.message || "Failed to update profile.");
+    }
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-
-    console.log("file", file);
-
     if (file) {
+      setImageFile(file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
+  if (isLoading) return <ShopOwnerCardSkeleton />;
+
   return (
-    <Card className="max-w-2xl mx-auto p-6 shadow-md">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="relative w-24 h-24 rounded-full overflow-hidden">
+    <Card className="max-w-2xl border-0 mx-auto p-6">
+      <div className="flex gap-6 items-center space-y-4">
+        <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
           {imagePreview ? (
             <Image
               src={imagePreview}
@@ -53,12 +88,14 @@ export default function ProfileCard() {
               className="object-cover"
             />
           ) : (
-            <User className="w-24 h-24 text-gray-300" />
+            <User className="w-12 h-12 text-gray-300" />
           )}
         </div>
-        <label className="cursor-pointer bg-gray-200 px-4 py-2 rounded text-sm hover:bg-gray-300">
+
+        <label className="cursor-pointer bg-[#ebeaf1] text-[#4F5655] font-bold px-4 py-2 rounded text-sm hover:bg-gray-300">
           Upload new Image
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleImageChange}
@@ -67,27 +104,32 @@ export default function ProfileCard() {
         </label>
       </div>
 
+      {/* Form */}
       <CardContent className="mt-6 border p-6 rounded-2xl">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-semibold mb-2">
-              Admin Name
+              Full Name
             </label>
             <Input
-              {...register("adminName")}
+              {...register("fullName")}
               className="py-6"
-              placeholder="Enter your name"
+              placeholder="Enter full name"
             />
           </div>
 
-          <div className="flex justify-end gap-2 mt-5">
-            <Link href="/admin/profile">
-              <Button className="py-6" type="button" variant="secondary">
-                Cancel
-              </Button>
-            </Link>
-            <Button className="py-6" type="submit">
-              Save Changes
+          <div className="flex justify-start gap-2 mt-5">
+            <Button
+              onClick={() => window.history.back()}
+              className="py-4"
+              type="button"
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+
+            <Button className="py-4" type="submit" disabled={isUpdating}>
+              {isUpdating ? <Loading /> : "Save Changes"}
             </Button>
           </div>
         </form>

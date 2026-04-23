@@ -63,7 +63,7 @@ export default function ResetPassword() {
 
       if (res.success) {
         toast.success(res.message);
-        router.push("/login");
+        router.push("/admin-login");
       } else {
         toast.error(res.message);
       }
@@ -179,15 +179,13 @@ export default function ResetPassword() {
               </p>
             )}
 
-            <Link href="/admin-forgot-password/otp/successful">
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-6 font-semibold transition-colors"
-                disabled={isSubmitting || !isPasswordMatch || isLoading}
-              >
-                {isLoading ? "Updating..." : "Continue"}
-              </Button>
-            </Link>
+            <Button
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90 rounded-2xl py-6 font-semibold transition-colors"
+              disabled={isSubmitting || !isPasswordMatch || isLoading}
+            >
+              {isLoading ? "Updating..." : "Continue"}
+            </Button>
           </form>
         </Form>
       </div>
