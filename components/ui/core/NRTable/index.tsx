@@ -37,7 +37,7 @@ export function RWTable<TData, TValue>({
   return (
     <div className="my-5">
       <Table>
-        <TableHeader className="bg-gray-100 my-16">
+        <TableHeader className="bg-gray-100 my-16 scroll-auto">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

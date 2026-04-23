@@ -142,7 +142,7 @@ const BillingTable = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between bg-[#e9f0ff] rounded-xl px-5 py-4 shadow-sm">
+      {/* <div className="flex items-center justify-between bg-[#e9f0ff] rounded-xl px-5 py-4 shadow-sm">
         <div className="text-sm">
           <span className="font-medium text-gray-800">
             Current Subscription :
@@ -166,7 +166,6 @@ const BillingTable = () => {
           </span>
         </div>
 
-        {/* Toggle */}
         <div className="flex items-center bg-gray-200 rounded-full p-1">
           <button
             onClick={() => handleToggle("cancel-renewal")}
@@ -188,7 +187,7 @@ const BillingTable = () => {
             Auto Renew
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Table */}
       <div className="rounded-xl bg-white shadow">
@@ -196,7 +195,7 @@ const BillingTable = () => {
           Billing Management
         </h2>
 
-        <div className="p-4">
+        <div className="h-[480px] p-4">
           <RWTable columns={columns} data={billing} />
         </div>
       </div>
