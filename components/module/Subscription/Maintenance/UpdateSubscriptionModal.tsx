@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
+import Loading from "@/components/shared/Loading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -18,22 +22,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUpdatePlanMutation } from "@/redux/api/adminDashboardApi";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+interface Price {
+  duration: "Monthly" | "Annually";
+  price: number;
+}
+
+interface PlanData {
+  id: string;
+  category: "BASIC" | "PROFESSIONAL" | "EUROPEAN";
+  name: string;
+  description: string;
+  prices: Price[];
+  technicianLimit: number;
+  hasTrial: boolean;
+  features: string[];
+  isActive: boolean;
+}
 
 interface UpdateSubscriptionModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  data?: {
-    plan: string;
-    price: string;
-    duration: string;
-    technician: number;
-    features: string[];
-  };
+  data?: PlanData;
 }
 
-const allFeatures = [
+const ALL_FEATURES = [
   "Shop Foreman AI",
   "Mechanical Diagnostics AI",
   "Electrical Diagnostics AI",
@@ -47,10 +64,41 @@ export function UpdateSubscriptionModal({
   onOpenChange,
   data,
 }: UpdateSubscriptionModalProps) {
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>(
-    data?.features || [],
-  );
-  const [duration, setDuration] = useState(data?.duration || "Monthly");
+  const [updatePlan, { isLoading: isUpdating }] = useUpdatePlanMutation();
+
+  const [category, setCategory] = useState<PlanData["category"]>("BASIC");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [technicianLimit, setTechnicianLimit] = useState(3);
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+
+  const [prices, setPrices] = useState<Price[]>([
+    { duration: "Monthly", price: 0 },
+    { duration: "Annually", price: 0 },
+  ]);
+
+  useEffect(() => {
+    if (!data) return;
+    setCategory(data.category);
+    setName(data.name);
+    setDescription(data.description);
+    setTechnicianLimit(data.technicianLimit);
+    setSelectedFeatures(data.features ?? []);
+    setPrices(
+      data.prices?.length
+        ? data.prices
+        : [
+            { duration: "Monthly", price: 0 },
+            { duration: "Annually", price: 0 },
+          ],
+    );
+  }, [data]);
+
+  const updatePrice = (duration: Price["duration"], value: number) => {
+    setPrices((prev) =>
+      prev.map((p) => (p.duration === duration ? { ...p, price: value } : p)),
+    );
+  };
 
   const toggleFeature = (feature: string) => {
     setSelectedFeatures((prev) =>
@@ -64,14 +112,42 @@ export function UpdateSubscriptionModal({
     setSelectedFeatures((prev) => prev.filter((f) => f !== feature));
   };
 
-  const handleSave = () => {
-    console.log("Saving changes:", { selectedFeatures, duration });
-    onOpenChange(false);
+  const handleSave = async () => {
+    if (!data?.id) {
+      console.error("No plan ID found", data);
+      return;
+    }
+
+    const payload = {
+      category,
+      prices,
+      name,
+      description,
+      technicianLimit,
+      features: selectedFeatures,
+    };
+
+    try {
+      const res = (await updatePlan({
+        id: data.id,
+        body: payload,
+      }).unwrap()) as any;
+
+      if (res?.success) {
+        toast.success(res.message || "Plan updated successfully!");
+      }
+
+      onOpenChange(false);
+    } catch (err: any) {
+      toast.error(
+        err?.data?.message || "Failed to update plan. Please try again.",
+      );
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Update Subscription</DialogTitle>
         </DialogHeader>
@@ -81,46 +157,81 @@ export function UpdateSubscriptionModal({
             <h3 className="font-semibold text-gray-900">Plan Information</h3>
 
             <div className="grid grid-cols-2 gap-4">
+              {/* Category */}
               <div className="space-y-2">
                 <Label className="text-sm font-medium text-gray-700">
                   Plan Category
                 </Label>
-                <input
-                  type="text"
-                  value={data?.plan || "BASIC"}
-                  readOnly
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-700"
-                />
-              </div>
-
-              {/* Price */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  Price
-                </Label>
-                <input
-                  type="text"
-                  value={data?.price || "$79"}
-                  readOnly
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-700"
-                />
-              </div>
-
-              {/* Duration */}
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-gray-700">
-                  Duration
-                </Label>
-                <Select value={duration} onValueChange={setDuration}>
+                <Select
+                  value={category}
+                  onValueChange={(v) => setCategory(v as PlanData["category"])}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Monthly">Monthly</SelectItem>
-                    <SelectItem value="Yearly">Yearly</SelectItem>
-                    <SelectItem value="Quarterly">Quarterly</SelectItem>
+                    <SelectItem value="BASIC">BASIC</SelectItem>
+                    <SelectItem value="PROFESSIONAL">PROFESSIONAL</SelectItem>
+                    <SelectItem value="EUROPEAN">EUROPEAN</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Plan Name
+                </Label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Basic Shop Plan"
+                />
+              </div>
+
+              <div className="col-span-2 space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Description
+                </Label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={2}
+                  placeholder="Plan description..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Monthly Price (USD)
+                </Label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={
+                    prices.find((p) => p.duration === "Monthly")?.price ?? 0
+                  }
+                  onChange={(e) =>
+                    updatePrice("Monthly", Number(e.target.value))
+                  }
+                />
+              </div>
+
+              {/* Annually Price */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-gray-700">
+                  Annually Price (USD)
+                </Label>
+                <Input
+                  type="number"
+                  min={0}
+                  value={
+                    prices.find((p) => p.duration === "Annually")?.price ?? 0
+                  }
+                  onChange={(e) =>
+                    updatePrice("Annually", Number(e.target.value))
+                  }
+                />
               </div>
 
               {/* Technician Limit */}
@@ -128,11 +239,11 @@ export function UpdateSubscriptionModal({
                 <Label className="text-sm font-medium text-gray-700">
                   Technician Limit
                 </Label>
-                <input
+                <Input
                   type="number"
-                  value={data?.technician || 3}
-                  readOnly
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-700"
+                  min={1}
+                  value={technicianLimit}
+                  onChange={(e) => setTechnicianLimit(Number(e.target.value))}
                 />
               </div>
             </div>
@@ -141,13 +252,14 @@ export function UpdateSubscriptionModal({
           <div className="space-y-4">
             <h3 className="font-semibold text-gray-900">Features</h3>
 
+            {/* Selected feature tags */}
             {selectedFeatures.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {selectedFeatures.map((feature) => (
                   <Badge
                     key={feature}
                     variant="secondary"
-                    className="bg-[#e9f0ff] text-md text-[#4F5655] rounded-md py-2 px-2 flex items-center gap-2"
+                    className="bg-[#e9f0ff] text-sm text-[#4F5655] rounded-md py-2 px-3 flex items-center gap-2"
                   >
                     {feature}
                     <button
@@ -161,8 +273,9 @@ export function UpdateSubscriptionModal({
               </div>
             )}
 
+            {/* Feature checkboxes */}
             <div className="space-y-3 border-t pt-4">
-              {allFeatures.map((feature) => (
+              {ALL_FEATURES.map((feature) => (
                 <div key={feature} className="flex items-center gap-3">
                   <Checkbox
                     id={feature}
@@ -171,7 +284,7 @@ export function UpdateSubscriptionModal({
                   />
                   <Label
                     htmlFor={feature}
-                    className="text-md text-gray-700 cursor-pointer font-normal"
+                    className="text-sm text-gray-700 cursor-pointer font-normal"
                   >
                     {feature}
                   </Label>
@@ -181,19 +294,21 @@ export function UpdateSubscriptionModal({
           </div>
         </div>
 
-        <DialogFooter className="gap-2">
+        <DialogFooter className="gap-2 pt-2">
           <Button
-            className="py-6 px-3 rounded-2xl"
+            className="py-6 px-6 rounded-2xl"
             variant="outline"
             onClick={() => onOpenChange(false)}
+            disabled={isUpdating}
           >
             Cancel
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-[#1b4075] py-6 px-3 hover:bg-blue-800 text-white"
+            disabled={isUpdating}
+            className="bg-[#1b4075] py-6 px-6 hover:bg-blue-800 text-white rounded-2xl"
           >
-            Save Changes
+            {isUpdating ? <Loading /> : "Save Changes"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -13,6 +12,7 @@ import {
   YAxis,
 } from "recharts";
 
+// Decorative chart — no real monthly breakdown in API, kept as visual
 const chartData = [
   { month: "Jan", value: 4200, value2: 3800 },
   { month: "Feb", value: 3800, value2: 4200 },
@@ -22,33 +22,20 @@ const chartData = [
   { month: "Jun", value: 5800, value2: 3500 },
 ];
 
-const technicians = [
-  {
-    id: 1,
-    name: "John",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=96&h=96&fit=crop",
-  },
-  {
-    id: 2,
-    name: "Sarah",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=96&h=96&fit=crop",
-  },
-  {
-    id: 3,
-    name: "Mike",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=96&h=96&fit=crop",
-  },
-];
+type AiSessions = {
+  total: number;
+  technicians: number;
+};
 
-export default function AiSessionsCard() {
+export default function AiSessionsCard({
+  aiSessions,
+}: {
+  aiSessions: AiSessions;
+}) {
   const [period, setPeriod] = useState("Monthly");
 
   return (
     <div className="w-full bg-white rounded-xl p-8 shadow-sm">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-semibold text-gray-900">AI Sessions</h2>
         <Button
@@ -60,44 +47,35 @@ export default function AiSessionsCard() {
         </Button>
       </div>
 
-      {/* Divider */}
       <div className="border-b border-gray-200 mb-8" />
 
       <div className="grid grid-cols-2 gap-8">
-        {/* Left Section */}
         <div className="flex flex-col justify-between">
-          {/* Main Stat */}
           <div className="mb-8">
-            <h3 className="text-5xl font-bold text-gray-900 mb-2">42,629</h3>
+            <h3 className="text-5xl font-bold text-gray-900 mb-2">
+              {aiSessions.total?.toLocaleString() ?? "0"}
+            </h3>
             <p className="text-gray-600">sessions</p>
           </div>
 
-          {/* Subtitle */}
           <div className="mb-8">
-            <p className="text-gray-600 text-sm mb-4">
+            <p className="text-gray-600 text-sm">
               Completed by the technicians
             </p>
           </div>
 
-          {/* Technicians */}
-          <div className="flex items-center gap-4">
-            <div className="flex -space-x-3">
-              {technicians.map((tech, idx) => (
-                <Avatar
-                  key={tech.id}
-                  className="w-12 h-12 border-2 border-white shadow-sm"
-                  style={{ zIndex: technicians.length - idx }}
-                >
-                  <AvatarImage src={tech.image} alt={tech.name} />
-                  <AvatarFallback>{tech.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-              ))}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+              <span className="text-red-700 font-bold text-sm">
+                {aiSessions.technicians ?? 0}
+              </span>
             </div>
-            <p className="text-gray-900 font-medium">1200 Technicians</p>
+            <p className="text-gray-900 font-medium">
+              {aiSessions.technicians ?? 0} Technicians
+            </p>
           </div>
         </div>
 
-        {/* Right Section - Chart */}
         <div className="flex items-center justify-end">
           <ResponsiveContainer width="100%" height={280}>
             <BarChart

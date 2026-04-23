@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
+import TablePagination from "@/components/ui/core/NRTable/TablePagination";
 import {
   Select,
   SelectContent,
@@ -8,37 +11,49 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useGetAllShopsQuery } from "@/redux/api/adminDashboardApi";
+
 import { AlertCircle, CheckCircle2, ChevronDown, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
-type PlanType = "Basic Shop Plan" | "Professional Shop Plan";
-type StatusType = "Active" | "Suspended";
+// ── Types matching the API response ──────────────────────────────────────────
+type StatusType = "ACTIVE" | "INACTIVE" | "BLOCKED" | "INVITED" | "SUSPENDED";
 
-interface Technician {
+interface ApiTechnician {
   id: string;
-  no: string;
-  name: string;
+  fullName: string;
   email: string;
-  sessions: string;
+  totalSessions: number;
 }
 
-interface Shop {
+interface ApiShop {
   id: string;
-  shopOwner: string;
-  ownerEmail: string;
+  fullName: string;
+  email: string;
   shopName: string;
-  plan: PlanType;
   status: StatusType;
-  technicianCount: string;
-  technicians: Technician[];
+  plan: { id: string; name: string } | null;
+  technicians: ApiTechnician[];
 }
 
-interface ShopManagementTableProps {
-  data: Shop[];
-}
+const PLAN_OPTIONS = [
+  { label: "All Plans", value: "all" },
+  { label: "Basic Shop Plan", value: "BASIC" },
+  { label: "Professional Shop Plan", value: "PROFESSIONAL" },
+  { label: "European Specialist Plan", value: "EUROPEAN" },
+];
+
+const STATUS_OPTIONS = [
+  { label: "All Status", value: "all" },
+  { label: "Active", value: "ACTIVE" },
+  { label: "Inactive", value: "INACTIVE" },
+  { label: "Blocked", value: "BLOCKED" },
+  { label: "Invited", value: "INVITED" },
+  { label: "Suspended", value: "SUSPENDED" },
+];
 
 const StatusBadge = ({ status }: { status: StatusType }) => {
-  const isActive = status === "Active";
+  const isActive = status === "ACTIVE";
   return (
     <div
       className={`inline-flex items-center gap-1 px-3 py-1 rounded-md text-sm font-medium ${
@@ -50,31 +65,53 @@ const StatusBadge = ({ status }: { status: StatusType }) => {
       ) : (
         <AlertCircle className="w-4 h-4" />
       )}
-      {status}
+      {/* Capitalise first letter only for display */}
+      {status.charAt(0) + status.slice(1).toLowerCase()}
     </div>
   );
 };
 
-const ShopManagementTable = ({ data }: ShopManagementTableProps) => {
+const ShopManagementTable = () => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [planFilter, setPlanFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+
+  // Build query params; omit filters when "all" is selected
+  const queryParams: {
+    page: number;
+    limit: number;
+    category?: string;
+    status?: string;
+  } = { page: currentPage, limit };
+
+  if (planFilter !== "all") queryParams.category = planFilter;
+  if (statusFilter !== "all") queryParams.status = statusFilter;
+
+  const { data, isLoading, isFetching } = useGetAllShopsQuery(queryParams);
+
+  const shops: ApiShop[] = data?.data ?? [];
+  const totalItems: number = data?.meta?.total ?? 0;
 
   const toggleRow = (shopId: string) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(shopId)) {
-      newExpanded.delete(shopId);
-    } else {
-      newExpanded.add(shopId);
-    }
-    setExpandedRows(newExpanded);
+    setExpandedRows((prev) => {
+      const next = new Set(prev);
+      next.has(shopId) ? next.delete(shopId) : next.add(shopId);
+      return next;
+    });
   };
 
-  const filteredData = data.filter((shop) => {
-    const planMatch = planFilter === "all" || shop.plan === planFilter;
-    const statusMatch = statusFilter === "all" || shop.status === statusFilter;
-    return planMatch && statusMatch;
-  });
+  // Reset to page 1 whenever a filter changes
+  const handlePlanChange = (value: string) => {
+    setPlanFilter(value);
+    setCurrentPage(1);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="w-full bg-white rounded-lg shadow">
@@ -82,30 +119,34 @@ const ShopManagementTable = ({ data }: ShopManagementTableProps) => {
       <div className="border-b px-6 py-4">
         <div className="flex items-center my-6 justify-between">
           <h1 className="text-2xl font-semibold text-gray-900">
-            Shop & User Management
+            Shop &amp; User Management
           </h1>
           <div className="flex items-center gap-3">
-            <Select value={planFilter} onValueChange={setPlanFilter}>
-              <SelectTrigger className="w-32 h-10 rounded-full bg-[#f8f7f7]">
+            {/* Plan filter */}
+            <Select value={planFilter} onValueChange={handlePlanChange}>
+              <SelectTrigger className="w-44 h-10 rounded-full bg-[#f8f7f7]">
                 <SelectValue placeholder="Plan" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Plans</SelectItem>
-                <SelectItem value="Basic Shop Plan">Basic Plan</SelectItem>
-                <SelectItem value="Professional Shop Plan">
-                  Professional
-                </SelectItem>
+                {PLAN_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-32 h-10 rounded-full bg-[#f8f7f7]">
+            {/* Status filter */}
+            <Select value={statusFilter} onValueChange={handleStatusChange}>
+              <SelectTrigger className="w-36 h-10 rounded-full bg-[#f8f7f7]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Suspended">Suspended</SelectItem>
+                {STATUS_OPTIONS.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -114,156 +155,160 @@ const ShopManagementTable = ({ data }: ShopManagementTableProps) => {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 my-10 border-b">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900 w-8" />
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
-                Shop Owner
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
-                Shop Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
-                Plan
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
-                No. of technicians
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((shop) => (
-              <React.Fragment key={shop.id}>
-                <tr className="border-b hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 w-8">
-                    <button
-                      onClick={() => toggleRow(shop.id)}
-                      className="p-1 hover:bg-gray-200 rounded transition-colors"
-                    >
-                      <ChevronDown
-                        className={`w-4 h-4 text-gray-600 transition-transform ${
-                          expandedRows.has(shop.id) ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
+        {isLoading || isFetching ? (
+          <div className="flex items-center justify-center py-16 text-gray-400">
+            <Loading />
+          </div>
+        ) : (
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b">
+              <tr>
+                <th className="px-6 py-3 w-8" />
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
+                  Shop Owner
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
+                  Shop Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
+                  Plan
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
+                  No. of Technicians
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-900">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {shops.map((shop) => (
+                <React.Fragment key={shop.id}>
+                  {/* ── Shop row ── */}
+                  <tr className="border-b hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 w-8">
+                      <button
+                        onClick={() => toggleRow(shop.id)}
+                        className="p-1 hover:bg-gray-200 rounded transition-colors"
+                        aria-label="Toggle technicians"
+                      >
+                        <ChevronDown
+                          className={`w-4 h-4 text-gray-600 transition-transform ${
+                            expandedRows.has(shop.id) ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    </td>
+                    <td className="px-6 py-4">
                       <p className="font-medium text-gray-900">
-                        {shop.shopOwner}
+                        {shop.fullName}
                       </p>
-                      <p className="text-sm text-gray-500">{shop.ownerEmail}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-700">{shop.shopName}</td>
-                  <td className="px-6 py-4 text-gray-700">{shop.plan}</td>
-                  <td className="px-6 py-4">
-                    <StatusBadge status={shop.status} />
-                  </td>
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    {shop.technicianCount}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-gray-500">{shop.email}</p>
+                    </td>
+                    <td className="px-6 py-4 text-gray-700">{shop.shopName}</td>
+                    <td className="px-6 py-4 text-gray-700">
+                      {shop.plan?.name ?? (
+                        <span className="text-gray-400 italic">No plan</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={shop.status} />
+                    </td>
+                    <td className="px-6 py-4 font-medium text-gray-900">
+                      {shop.technicians.length}
+                    </td>
+                    <td className="px-6 py-4">
                       <Button
                         variant="ghost"
                         size="sm"
                         className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
+                        aria-label="Delete shop"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
-                      {/* <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0"
-                          >
-                            <MoreVertical className="w-4 h-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Edit</DropdownMenuItem>
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu> */}
-                    </div>
-                  </td>
-                </tr>
-
-                {/* Expanded Technicians Row */}
-                {expandedRows.has(shop.id) && (
-                  <tr>
-                    <td colSpan={7} className="px-0 py-0">
-                      <div className="bg-gray-50 px-6 py-4">
-                        <div className="bg-white rounded-lg border">
-                          <table className="w-full">
-                            <thead className="bg-gray-50 border-b">
-                              <tr>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
-                                  No. of Technicians
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
-                                  Technician Name
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
-                                  Technician Email Address
-                                </th>
-                                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
-                                  Sessions
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {shop.technicians.map((tech) => (
-                                <tr
-                                  key={tech.id}
-                                  className="border-b hover:bg-gray-50 transition-colors last:border-0"
-                                >
-                                  <td className="px-4 py-3 text-sm text-gray-700">
-                                    {tech.no}
-                                  </td>
-                                  <td className="px-4 py-3 text-sm text-gray-700">
-                                    {tech.name}
-                                  </td>
-                                  <td className="px-4 py-3 text-sm text-gray-700">
-                                    {tech.email}
-                                  </td>
-                                  <td className="px-4 py-3 text-sm font-medium text-red-600">
-                                    {tech.sessions}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
                     </td>
                   </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+
+                  {/* ── Expanded technicians row ── */}
+                  {expandedRows.has(shop.id) && (
+                    <tr>
+                      <td colSpan={7} className="px-0 py-0">
+                        <div className="bg-gray-50 px-6 py-4">
+                          {shop.technicians.length === 0 ? (
+                            <p className="text-sm text-gray-400 italic px-2">
+                              No technicians assigned to this shop.
+                            </p>
+                          ) : (
+                            <div className="bg-white rounded-lg border">
+                              <table className="w-full">
+                                <thead className="bg-gray-50 border-b">
+                                  <tr>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
+                                      No
+                                    </th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
+                                      Technician Name
+                                    </th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
+                                      Email Address
+                                    </th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-900">
+                                      Sessions
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {shop.technicians.map((tech, index) => (
+                                    <tr
+                                      key={tech.id}
+                                      className="border-b hover:bg-gray-50 transition-colors last:border-0"
+                                    >
+                                      <td className="px-4 py-3 text-sm text-gray-700">
+                                        {index + 1}
+                                      </td>
+                                      <td className="px-4 py-3 text-sm text-gray-700">
+                                        {tech.fullName}
+                                      </td>
+                                      <td className="px-4 py-3 text-sm text-gray-700">
+                                        {tech.email}
+                                      </td>
+                                      <td className="px-4 py-3 text-sm font-medium text-red-600">
+                                        {tech.totalSessions}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
-      {/* Empty State */}
-      {filteredData.length === 0 && (
+      {/* Empty state */}
+      {!isLoading && !isFetching && shops.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 text-gray-500">
           <p className="text-lg font-medium">No shops found</p>
           <p className="text-sm">Try adjusting your filters</p>
         </div>
       )}
+
+      {/* Pagination */}
+      <TablePagination
+        totalPage={Math.ceil(totalItems / limit)}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };

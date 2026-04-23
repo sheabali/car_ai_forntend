@@ -1,67 +1,68 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { RWTable } from "@/components/ui/core/NRTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { useMemo } from "react";
 
-type UserStatus = "Paid" | "UNPAID";
-
-const statusStyles: Record<UserStatus, string> = {
-  Paid: "bg-green-100 text-green-600 border-green-200",
-  UNPAID: "bg-red-100 text-red-600 border-red-200",
+type RecentUser = {
+  id: string;
+  shopOwner: string;
+  email: string;
+  shopName: string;
+  plan: string;
+  status: "ACTIVE" | "INACTIVE";
+  noOfTechnicians: number;
 };
 
-const StatusBadge = ({ status }: { status: UserStatus }) => (
+const statusStyles: Record<string, string> = {
+  ACTIVE: "bg-green-100 text-green-600 border-green-200",
+  INACTIVE: "bg-red-100 text-red-600 border-red-200",
+};
+
+const StatusBadge = ({ status }: { status: string }) => (
   <span
-    className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${statusStyles[status]}`}
+    className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${statusStyles[status] ?? "bg-gray-100 text-gray-600"}`}
   >
-    {status === "Paid" ? "PAID" : "UNPAID"}
+    {status}
   </span>
 );
 
-const CustomersTable = ({
-  recentCompletedJobs,
-}: {
-  recentCompletedJobs: any;
-}) => {
-  const columns = useMemo<ColumnDef<any>[]>(
+const CustomersTable = ({ recentUsers }: { recentUsers: RecentUser[] }) => {
+  const columns = useMemo<ColumnDef<RecentUser>[]>(
     () => [
       {
-        id: "parentName",
-        header: "Parent Name",
+        id: "shopOwner",
+        header: "Shop Owner",
         cell: ({ row }) => (
-          <p className="font-medium text-gray-900">{row.original.parentName}</p>
+          <p className="font-medium text-gray-900">{row.original.shopOwner}</p>
         ),
       },
       {
         id: "shopName",
         header: "Shop Name",
         cell: ({ row }) => (
-          <p className="text-gray-700">{row.original.caregiverName}</p>
+          <p className="text-gray-700">{row.original.shopName}</p>
         ),
       },
       {
-        accessorKey: "date",
-        header: "Date",
+        id: "plan",
+        header: "Plan",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">
-            {row.original.date
-              ? new Date(row.original.date).toLocaleDateString()
-              : "N/A"}
-          </p>
+          <p className="text-sm text-gray-700">{row.original.plan}</p>
         ),
       },
       {
         id: "status",
         header: "Status",
-        cell: ({ row }) => <StatusBadge status={row.original.incident} />,
+        cell: ({ row }) => <StatusBadge status={row.original.status} />,
       },
       {
-        accessorKey: "technicians",
+        id: "technicians",
         header: "Technicians",
         cell: ({ row }) => (
-          <p className="text-sm text-gray-700">{row.original.technicians}</p>
+          <p className="text-sm text-gray-700">
+            {row.original.noOfTechnicians}
+          </p>
         ),
       },
     ],
@@ -73,9 +74,8 @@ const CustomersTable = ({
       <div className="border-b p-4">
         <h2 className="text-lg font-semibold text-gray-900">Recent Users</h2>
       </div>
-
       <div className="pb-4 px-4">
-        <RWTable columns={columns} data={recentCompletedJobs} />
+        <RWTable columns={columns} data={recentUsers} />
       </div>
     </div>
   );

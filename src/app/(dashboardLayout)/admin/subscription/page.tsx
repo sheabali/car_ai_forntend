@@ -1,9 +1,9 @@
-import Subscription from "@/components/module/Subscription";
+import SubscriptionTable from "@/components/module/Subscription/Maintenance/MaintenanceTable";
 
 const page = () => {
   return (
     <div>
-      <Subscription />
+      <SubscriptionTable />
     </div>
   );
 };

@@ -20,28 +20,11 @@ import {
   YAxis,
 } from "recharts";
 
-const chartData = [
-  { day: "Sun", users: 20 },
-  { day: "Mon", users: 58 },
-  { day: "Tue", users: 40 },
-  { day: "Wed", users: 20 },
-  { day: "Thu", users: 80 },
-  { day: "Fri", users: 20 },
-  { day: "Sat", users: 20 },
-];
-
-const timeRanges = [
-  { label: "This Week", value: "week" },
-  { label: "This Month", value: "month" },
-  { label: "This Year", value: "year" },
-];
+type ChartEntry = { day: string; users: number };
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: Array<{
-    value: number;
-    payload: { day: string };
-  }>;
+  payload?: Array<{ value: number; payload: ChartEntry }>;
 }
 
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
@@ -59,11 +42,25 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   return null;
 };
 
-export default function ActiveUsersChart() {
+const timeRanges = [
+  { label: "This Week", value: "week" },
+  { label: "This Month", value: "month" },
+  { label: "This Year", value: "year" },
+];
+
+export default function ActiveUsersChart({
+  chartData,
+}: {
+  chartData: ChartEntry[];
+}) {
   const [timeRange, setTimeRange] = useState("week");
 
-  const maxValue = Math.max(...chartData.map((d) => d.users));
-  const highlightDay = "Thu";
+  const maxDay = chartData.reduce(
+    (max, entry) => (entry.users > max.users ? entry : max),
+    chartData[0] ?? { day: "", users: 0 },
+  ).day;
+
+  const yMax = Math.max(...chartData.map((d) => d.users), 10);
 
   return (
     <Card className="w-full border-0 bg-white">
@@ -105,7 +102,7 @@ export default function ActiveUsersChart() {
               tick={{ fill: "#64748b", fontSize: 12 }}
               axisLine={{ stroke: "#e2e8f0" }}
               tickLine={false}
-              domain={[0, 100]}
+              domain={[0, yMax + 5]}
             />
             <Tooltip
               content={<CustomTooltip />}
@@ -115,7 +112,7 @@ export default function ActiveUsersChart() {
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={entry.day === highlightDay ? "#1e3a8a" : "#c7d2fe"}
+                  fill={entry.day === maxDay ? "#1e3a8a" : "#c7d2fe"}
                 />
               ))}
             </Bar>
