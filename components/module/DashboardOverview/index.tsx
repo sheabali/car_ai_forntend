@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+
+"use client";
 import MetricCard from "@/components/shared/MetricCardDashboard";
+import { useGetDashboardOverviewQuery } from "@/redux/api/adminDashboardApi";
 import { Baby, UserCheck, Users } from "lucide-react";
 import ActiveUsersChart from "./ActiveUsersChart";
 import AiSessionsCard from "./AiSessionsCard";
@@ -7,6 +10,12 @@ import RecentBillingTable from "./RecentBillingTable";
 import CustomersTable from "./UserTable";
 
 const DashboardOverview = () => {
+  const { data: dashboardData, isLoading } = useGetDashboardOverviewQuery({});
+
+  const dashboard = dashboardData?.data || {};
+
+  const topStats = dashboard?.topStats;
+
   const recentCompletedJobs = [
     {
       id: "1",
