@@ -67,6 +67,7 @@ const ShopOwnerDashboardOverview = () => {
         ? new Date(activePlan.nextRenewal).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
+            year: "numeric",
           })
         : "N/A",
       icon: <Sparkles className="text-[#F5CC1D]" />,

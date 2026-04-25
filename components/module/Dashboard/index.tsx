@@ -70,7 +70,7 @@ interface AppHeaderProps {
 export default function AppHeader({
   role,
   user,
-  currentPath = "/admin/dashboard",
+  currentPath,
   onResetPassword,
   onLogout,
   onNavigate,
@@ -91,10 +91,8 @@ export default function AppHeader({
     setMobileOpen(false);
   };
 
-  // FIXED logout
   const handleLogout = () => {
     dispatch(logout());
-    router.push("/admin-login");
   };
 
   const safeUser = {

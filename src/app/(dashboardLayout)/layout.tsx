@@ -7,12 +7,14 @@ import { useGetMeQuery } from "@/redux/api/authApi";
 
 import { useAppSelector } from "@/redux/hooks";
 import { useDecodedToken } from "@/src/hooks/useDecodedToken";
+import { usePathname } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const currentPath = usePathname();
   const token = useAppSelector((state) => state.auth.token);
   const decodedToken = useDecodedToken(token);
 
@@ -40,7 +42,7 @@ export default function DashboardLayout({
       {/* <AppSidebar role={role} /> */}
       <SidebarInset>
         <header className="bg-[#f3f5f7] flex h-25 shrink-0  items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-          <AppHeader role={role} user={user} />
+          <AppHeader role={role} user={user} currentPath={currentPath} />
         </header>
         <div className="p-4 pt-0 bg-[#f3f5f7] min-h-screen">{children}</div>
       </SidebarInset>
