@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useUpdateTechnicianStatusMutation } from "@/redux/api/shopOwnerDashboardApi";
 import { Ban, CheckCircle, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 const ActionCell = ({ id, status }: { id: string; status: any }) => {
   const [updateStatus, { isLoading }] = useUpdateTechnicianStatusMutation();
@@ -8,7 +9,9 @@ const ActionCell = ({ id, status }: { id: string; status: any }) => {
   const handleStatusChange = async (newStatus: any) => {
     try {
       await updateStatus({ id, status: newStatus }).unwrap();
-    } catch (err) {
+      toast.success("Status updated successfully");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to update status.");
       console.error("Failed to update status:", err);
     }
   };

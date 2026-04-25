@@ -26,6 +26,7 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         url: "/technicians/management-stats",
         method: "GET",
       }),
+      providesTags: ["ShopOwner"],
     }),
     billingManagement: builder.query({
       query: () => ({
@@ -39,6 +40,7 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { status },
       }),
+      invalidatesTags: ["ShopOwner"],
     }),
     getBillingData: builder.query({
       query: () => ({
