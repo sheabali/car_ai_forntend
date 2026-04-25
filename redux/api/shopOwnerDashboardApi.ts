@@ -14,12 +14,14 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["ShopOwner"],
     }),
     getTechniciansLimitInfo: builder.query({
       query: () => ({
         url: "/technicians/limit-info",
         method: "GET",
       }),
+      providesTags: ["ShopOwner"],
     }),
     getTechniciansManagementStats: builder.query({
       query: () => ({
