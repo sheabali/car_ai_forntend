@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useGetMeQuery } from "@/redux/api/authApi";
 import { FlipWords } from "@/src/components/ui/flip-words";
 import { Send, X } from "lucide-react";
 import Link from "next/link";
@@ -18,6 +20,11 @@ export default function HeroSection() {
 
   const [input, setInput] = useState("");
   const [activeTab, setActiveTab] = useState("diagnosis");
+  const { data: getUser } = useGetMeQuery({}) as any;
+  const user = getUser?.data;
+  const isSubscribed = user?.isSubscribed;
+
+  console.log("user", user);
 
   const tabs = [
     "Vehicle Info",
@@ -50,11 +57,19 @@ export default function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <Link href="/register">
-              <Button className="py-5 px-6 sm:px-10 rounded-xl sm:rounded-2xl w-full sm:w-auto">
-                Get started
-              </Button>
-            </Link>
+            {isSubscribed ? (
+              <Link href="/chat">
+                <Button className="py-5 px-6 sm:px-10 rounded-xl sm:rounded-2xl w-full sm:w-auto">
+                  Open Chat
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/register">
+                <Button className="py-5 px-6 sm:px-10 rounded-xl sm:rounded-2xl w-full sm:w-auto">
+                  Get started
+                </Button>
+              </Link>
+            )}
             <Button
               variant="outline"
               className="py-5 px-6 sm:px-10 w-full sm:w-auto bg-[#f5f8fb] rounded-xl sm:rounded-2xl border-primary text-primary font-semibold"

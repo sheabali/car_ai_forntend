@@ -66,6 +66,8 @@ export default function LoginPage() {
           router.push("/admin/dashboard");
         } else if (user?.role === "USER") {
           router.push("/shop-owner/dashboard");
+        } else if (user?.role === "TECHNICIAN") {
+          router.push("/chat");
         }
       } else {
         toast.error(res.message || "Login failed");
