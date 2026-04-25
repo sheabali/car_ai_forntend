@@ -8,7 +8,7 @@ export const adminDashboardApi = baseApi.injectEndpoints({
         url: "/admin/dashboard",
         method: "GET",
       }),
-      providesTags: ["Admin"],
+      providesTags: ["ShopOwner"],
     }),
 
     getAllShops: builder.query({
@@ -17,7 +17,7 @@ export const adminDashboardApi = baseApi.injectEndpoints({
         method: "GET",
         params: { page, limit, category, status },
       }),
-      providesTags: ["Admin"],
+      providesTags: ["ShopOwner"],
     }),
 
     updateProfile: builder.mutation({
@@ -65,6 +65,16 @@ export const adminDashboardApi = baseApi.injectEndpoints({
       }),
       providesTags: ["ShopOwner"],
     }),
+    adminShopsStatus: builder.mutation({
+      query: (data) => ({
+        url: `/admin/shops/status/${data.id}`,
+        method: "PATCH",
+        body: {
+          status: data.status,
+        },
+      }),
+      invalidatesTags: ["ShopOwner"],
+    }),
   }),
 });
 
@@ -76,4 +86,5 @@ export const {
   useGetAllPlansQuery,
   useUpdatePlanMutation,
   useGetAllSubscriptionsQuery,
+  useAdminShopsStatusMutation,
 } = adminDashboardApi;

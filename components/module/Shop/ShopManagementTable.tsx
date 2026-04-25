@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
@@ -11,12 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useGetAllShopsQuery } from "@/redux/api/adminDashboardApi";
+import {
+  useAdminShopsStatusMutation,
+  useGetAllShopsQuery,
+} from "@/redux/api/adminDashboardApi";
 
 import { AlertCircle, CheckCircle2, ChevronDown, Trash2 } from "lucide-react";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
-// ── Types matching the API response ──────────────────────────────────────────
 type StatusType = "ACTIVE" | "INACTIVE" | "BLOCKED" | "INVITED" | "SUSPENDED";
 
 interface ApiTechnician {
@@ -65,7 +69,7 @@ const StatusBadge = ({ status }: { status: StatusType }) => {
       ) : (
         <AlertCircle className="w-4 h-4" />
       )}
-      {/* Capitalise first letter only for display */}
+
       {status.charAt(0) + status.slice(1).toLowerCase()}
     </div>
   );
@@ -78,7 +82,9 @@ const ShopManagementTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
-  // Build query params; omit filters when "all" is selected
+  const [adminShopsStatus, { isLoading: isUpdating }] =
+    useAdminShopsStatusMutation();
+
   const queryParams: {
     page: number;
     limit: number;
@@ -111,6 +117,22 @@ const ShopManagementTable = () => {
   const handleStatusChange = (value: string) => {
     setStatusFilter(value);
     setCurrentPage(1);
+  };
+
+  const handleDeleteOrSuspend = async (shopId: string, status: StatusType) => {
+    try {
+      const payload = {
+        id: shopId,
+        status,
+      };
+
+      await adminShopsStatus(payload);
+
+      toast.success("Shop status updated successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
+      console.log(error);
+    }
   };
 
   return (
@@ -221,14 +243,34 @@ const ShopManagementTable = () => {
                       {shop.technicians.length}
                     </td>
                     <td className="px-6 py-4">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
-                        aria-label="Delete shop"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      {shop.status === "ACTIVE" ? (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteOrSuspend(
+                              shop.id as string,
+                              "SUSPENDED",
+                            )
+                          }
+                          className="h-8 w-8 p-0 text-red-600 hover:bg-red-50 hover:text-red-700"
+                          aria-label="Delete shop"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteOrSuspend(shop.id as string, "ACTIVE")
+                          }
+                          className="h-8 w-8 p-0 text-green-600 hover:bg-green-50 hover:text-green-700"
+                          aria-label="Delete shop"
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                        </Button>
+                      )}
                     </td>
                   </tr>
 
