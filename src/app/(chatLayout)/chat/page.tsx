@@ -116,6 +116,10 @@ const DiagnosticChatHome = ({
     .toUpperCase()
     .slice(0, 2);
 
+  function handleSendMessage() {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="flex h-screen w-full overflow-hidden bg-white rounded-2xl shadow-xl border border-blue-100">
       {/* Sidebar */}
@@ -193,10 +197,10 @@ const DiagnosticChatHome = ({
         <div className="p-4 border-t border-blue-100 bg-white/60">
           <div className="flex items-center gap-3">
             {/* Avatar */}
-            {user?.avatar || user?.profileImage ? (
+            {user?.profileImage ? (
               <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-blue-200 shrink-0">
                 <Image
-                  src={user.avatar || user.profileImage}
+                  src={user.profileImage}
                   alt={displayName}
                   fill
                   className="object-cover"
@@ -213,11 +217,15 @@ const DiagnosticChatHome = ({
               <p className="text-sm font-semibold text-[#111827] truncate">
                 {displayName}
               </p>
+
               {displayEmail && (
                 <p className="text-[11px] text-[#6B7280] truncate">
                   {displayEmail}
                 </p>
               )}
+              <div className="text-xs font-semibold text-gray-800 mb-2">
+                {user?.plan?.name || "No Plan Found"}
+              </div>
             </div>
 
             {/* Logout Button */}
@@ -225,8 +233,7 @@ const DiagnosticChatHome = ({
               variant="ghost"
               size="icon"
               onClick={handleLogout}
-              title="Logout"
-              className="shrink-0 text-[#6B7280] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="shrink-0 text-[#6B7280] hover:text-red-500 hover:bg-red-50 rounded-lg"
             >
               <LogOut className="w-4 h-4" />
             </Button>
@@ -328,9 +335,13 @@ const DiagnosticChatHome = ({
                 <Textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleStartChat()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                    }
+                  }}
                   placeholder="Describe vehicle issues, symptoms, or error codes..."
-                  className="pr-24 py-6 bg-gray-50 text-black border-blue-100 rounded-2xl focus-visible:ring-blue-400"
+                  className="pl-12 pr-24 py-6 bg-gray-50 text-black border-blue-100 rounded-2xl focus-visible:ring-blue-400"
                 />
                 <div className="absolute right-2 flex items-center gap-1">
                   <Button

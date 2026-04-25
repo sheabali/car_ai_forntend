@@ -205,10 +205,10 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
         <div className="p-4 border-t border-blue-100 bg-white/60">
           <div className="flex items-center gap-3">
             {/* Avatar */}
-            {user?.avatar || user?.profileImage ? (
+            {user?.profileImage ? (
               <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-blue-200 shrink-0">
                 <Image
-                  src={user.avatar || user.profileImage}
+                  src={user.profileImage}
                   alt={displayName}
                   fill
                   className="object-cover"
@@ -225,11 +225,15 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
               <p className="text-sm font-semibold text-[#111827] truncate">
                 {displayName}
               </p>
+
               {displayEmail && (
                 <p className="text-[11px] text-[#6B7280] truncate">
                   {displayEmail}
                 </p>
               )}
+              <div className="text-xs font-semibold text-gray-800 mb-2">
+                {user?.plan?.name || "No Plan Found"}
+              </div>
             </div>
 
             {/* Logout Button */}
@@ -237,8 +241,7 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
               variant="ghost"
               size="icon"
               onClick={handleLogout}
-              title="Logout"
-              className="shrink-0 text-[#6B7280] hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              className="shrink-0 text-[#6B7280] hover:text-red-500 hover:bg-red-50 rounded-lg"
             >
               <LogOut className="w-4 h-4" />
             </Button>
