@@ -34,10 +34,7 @@ interface DiagnosticChatHomeProps {
   onLogout?: () => void;
 }
 
-const DiagnosticChatHome = ({
-  onSessionStart,
-  onLogout,
-}: DiagnosticChatHomeProps) => {
+const DiagnosticChatHome = ({ onSessionStart }: DiagnosticChatHomeProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [searchTerm, setSearchTerm] = useState("");

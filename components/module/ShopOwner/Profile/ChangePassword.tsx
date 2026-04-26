@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useChangePasswordMutation } from "@/redux/api/authApi";
+import { logout } from "@/redux/features/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -40,8 +42,9 @@ const formSchema = z
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function ShopOwnerChangePasswordPage() {
+export default function ShopOwnerChangePassword() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -59,23 +62,30 @@ export default function ShopOwnerChangePasswordPage() {
   });
 
   const onSubmit = async (values: FormValues) => {
+    const payload = {
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    };
+
     try {
-      const res = (await changePassword(values).unwrap()) as any;
+      const res = (await changePassword(payload).unwrap()) as any;
 
       if (res.success) {
         toast.success(res.message || "Password changed successfully");
-        router.push("/");
+        dispatch(logout());
+        window.location.reload();
       } else {
         toast.error(res.message || "Failed to change password");
       }
     } catch (error: any) {
       toast.error(error?.data?.message || "An error occurred");
     }
-
-    alert("Password changed successfully! (Demo)");
-
-    form.reset();
   };
+
+  // if (sussess) {
+  //   dispatch(logout());
+  //   router.push("/shop-owner/profile");
+  // }
 
   const PasswordInput = ({
     field,

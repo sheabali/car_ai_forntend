@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { logout } from "../features/authSlice";
 import { RootState } from "../store";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
@@ -31,7 +30,7 @@ const baseQueryWithAuth: ReturnType<typeof fetchBaseQuery> = async (
     result.error &&
     (result.error.status === 401 || result.error.status === 403)
   ) {
-    api.dispatch(logout());
+    // api.dispatch(logout());
     // Redirect to login page
     // if (typeof window !== "undefined") {
     //   window.location.href = "/login";

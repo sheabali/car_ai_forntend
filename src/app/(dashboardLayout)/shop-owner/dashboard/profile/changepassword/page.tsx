@@ -1,9 +1,9 @@
-import ShopOwnerChangePasswordPage from "@/components/module/ShopOwner/Profile/ChangePassword";
+import ShopOwnerChangePassword from "@/components/module/ShopOwner/Profile/ChangePassword";
 
 const page = () => {
   return (
     <div>
-      <ShopOwnerChangePasswordPage />
+      <ShopOwnerChangePassword />
     </div>
   );
 };

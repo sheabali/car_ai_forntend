@@ -4,14 +4,15 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useGetMeQuery } from "@/redux/api/authApi";
+
+import { useGetProfileQuery } from "@/redux/api/authApi";
 import { SquarePen, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ShopOwnerCardSkeleton from "./ShopOwnerCardSkeleton";
 
 const ShopOwnerCard = () => {
-  const { data: getMeData, isLoading } = useGetMeQuery({}) as any;
+  const { data: getMeData, isLoading } = useGetProfileQuery({}) as any;
 
   const me = getMeData?.data;
 

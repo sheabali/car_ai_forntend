@@ -5,11 +5,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useGetMeQuery } from "@/redux/api/authApi";
-import { useUpdateProfileMutation } from "@/redux/api/shopOwnerDashboardApi";
+import { useGetProfileQuery, useUpdateUserMutation } from "@/redux/api/authApi";
+
+import Loading from "@/components/shared/Loading";
 import { User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -24,8 +26,10 @@ interface FormValues {
 }
 
 export default function ShopOwnerProfileCard() {
-  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
-  const { data: getMeData, isLoading } = useGetMeQuery({}) as any;
+  const router = useRouter();
+
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const { data: getMeData, isLoading } = useGetProfileQuery({}) as any;
   const me = getMeData?.data;
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -60,6 +64,8 @@ export default function ShopOwnerProfileCard() {
 
       await updateProfile(formData).unwrap();
       toast.success("Profile updated successfully!");
+      // window.location.reload();
+      router.push("/shop-owner/dashboard/profile");
     } catch (error: any) {
       console.error("Update failed:", error);
       toast.error(error?.data?.message || "Failed to update profile.");
@@ -120,18 +126,6 @@ export default function ShopOwnerProfileCard() {
 
           <div>
             <label className="block text-sm font-semibold mb-2">
-              Email Account
-            </label>
-            {/* <Input
-              type="email"
-              {...register("email")}
-              className="py-6"
-              placeholder="Enter email"
-            /> */}
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold mb-2">
               Shop Name
             </label>
             <Input
@@ -171,7 +165,7 @@ export default function ShopOwnerProfileCard() {
               </Button>
             </Link>
             <Button className="py-4" type="submit" disabled={isUpdating}>
-              {isUpdating ? "Saving..." : "Save Changes"}
+              {isUpdating ? <Loading /> : "Save Changes"}
             </Button>
           </div>
         </form>

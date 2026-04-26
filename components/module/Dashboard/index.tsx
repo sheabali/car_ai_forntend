@@ -63,7 +63,7 @@ interface AppHeaderProps {
   user?: any;
   currentPath?: string;
   onResetPassword?: () => void;
-  onLogout?: () => void;
+
   onNavigate?: (url: string) => void;
 }
 
@@ -72,7 +72,6 @@ export default function AppHeader({
   user,
   currentPath,
   onResetPassword,
-  onLogout,
   onNavigate,
 }: AppHeaderProps) {
   const router = useRouter();

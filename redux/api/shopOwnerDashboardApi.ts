@@ -63,13 +63,21 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: { value },
       }),
+      invalidatesTags: ["ShopOwner"],
     }),
+
+    getProfile: builder.query({
+      query: () => "/users/profile",
+      providesTags: ["ShopOwner"],
+    }),
+
     updateProfile: builder.mutation({
       query: (data) => ({
         url: "/users/update-profile",
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["ShopOwner"],
     }),
     changePassword: builder.mutation({
       query: (data) => ({
@@ -77,6 +85,7 @@ export const shopOwnerDashboardApi = baseApi.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["ShopOwner"],
     }),
   }),
 });
@@ -91,6 +100,7 @@ export const {
   useGetBillingDataQuery,
   useUpdateAutoRenewMutation,
   useGetMySubscriptionsQuery,
+  useGetProfileQuery,
   useUpdateProfileMutation,
   useChangePasswordMutation,
 } = shopOwnerDashboardApi;
