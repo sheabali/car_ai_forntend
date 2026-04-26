@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,7 +17,6 @@ import { useResetPasswordMutation } from "@/redux/api/authApi";
 
 import { Eye, EyeOff, Lock } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -181,15 +181,14 @@ export default function ResetPassword() {
               />
 
               {/* Submit Button */}
-              <Link href="/login">
-                <Button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 rounded-lg py-6 font-medium transition-colors"
-                  disabled={isSubmitting || !isPasswordMatch}
-                >
-                  Continue
-                </Button>
-              </Link>
+
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 rounded-lg py-6 font-medium transition-colors"
+                disabled={isSubmitting || !isPasswordMatch}
+              >
+                {isSubmitting ? <Loading /> : "Change Password"}
+              </Button>
 
               {/* Show password mismatch error */}
               {!isPasswordMatch && watchConfirmPassword && (

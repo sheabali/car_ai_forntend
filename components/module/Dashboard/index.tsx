@@ -92,6 +92,7 @@ export default function AppHeader({
 
   const handleLogout = () => {
     dispatch(logout());
+    window.location.reload();
   };
 
   const safeUser = {
@@ -100,7 +101,7 @@ export default function AppHeader({
     profileImage: user?.profileImage || "",
   };
 
-  const initials = safeUser.name
+  const initials = safeUser?.name
     .trim()
     .split(" ")
     .filter(Boolean)

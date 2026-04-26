@@ -166,6 +166,7 @@ export default function Otp() {
 
     try {
       const res = await verifiedOtp(payload).unwrap();
+      console.log("res", res);
 
       if (res.success) {
         toast.success(res.message);
@@ -237,18 +238,13 @@ export default function Otp() {
 
               {/* BUTTONS */}
               <div className="flex gap-4">
-                <Link
-                  href="/forgot-password/otp/change-password"
-                  className="w-full"
+                <button
+                  type="submit"
+                  disabled={isVerifyingOtp || otpValues.some((v) => !v)}
+                  className="w-full bg-primary cursor-pointer text-white py-3 rounded-lg"
                 >
-                  <button
-                    type="submit"
-                    disabled={isVerifyingOtp || otpValues.some((v) => !v)}
-                    className="w-full bg-primary cursor-pointer text-white py-3 rounded-lg"
-                  >
-                    {isVerifyingOtp ? "Loading..." : "Verify OTP"}
-                  </button>
-                </Link>
+                  {isVerifyingOtp ? "Loading..." : "Verify OTP"}
+                </button>
 
                 <Link href="/forgot-password" className="w-full">
                   <Button variant="outline" className="w-full py-6">
