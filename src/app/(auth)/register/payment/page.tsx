@@ -7,7 +7,7 @@ import { OnboardingProvider } from "@/src/app/context/onboarding-context";
 export default function PaymentPage() {
   return (
     <OnboardingProvider>
-      <OnboardingLayout currentStep={3}>
+      <OnboardingLayout currentStep={4}>
         <SubscriptionSection />
       </OnboardingLayout>
     </OnboardingProvider>

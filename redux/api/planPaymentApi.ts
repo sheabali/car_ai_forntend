@@ -44,6 +44,13 @@ export const planPaymentApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+    verifyEmailOtp: builder.mutation<any, any>({
+      query: (data) => ({
+        url: `/auth/verify-email-otp`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -54,4 +61,5 @@ export const {
   usePaymentConfirmPaymentMutation,
   useGetSingleSubscriptionQuery,
   useGetMyPaymentIdQuery,
+  useVerifyEmailOtpMutation,
 } = planPaymentApi;

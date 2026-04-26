@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -119,7 +120,7 @@ function ShopSetupContent() {
           dispatch(setUser({ token, user }));
         }
 
-        router.push("/register/plan-selection");
+        router.push(`/register/verification-otp?email=${formData.email}`);
       }
     } catch (error: any) {
       console.error("Error during registration:", error);

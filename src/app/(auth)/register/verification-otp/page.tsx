@@ -1,14 +1,14 @@
 "use client";
 
+import VerificationOtpPage from "@/components/module/Auth/VerificationOtp";
 import { OnboardingLayout } from "@/components/module/Onboarding/onboarding-layout";
-import PlanSelection from "@/components/module/Onboarding/PlanSelection";
 import { OnboardingProvider } from "@/src/app/context/onboarding-context";
 
-export default function PlanSelectionPage() {
+export default function VerificationOtp() {
   return (
     <OnboardingProvider>
-      <OnboardingLayout currentStep={3}>
-        <PlanSelection />
+      <OnboardingLayout currentStep={2}>
+        <VerificationOtpPage />
       </OnboardingLayout>
     </OnboardingProvider>
   );
