@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useGetMeQuery } from "@/redux/api/authApi";
 import { FlipWords } from "@/src/components/ui/flip-words";
-import { Send, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -72,6 +72,10 @@ export default function HeroSection() {
             )}
             <Button
               variant="outline"
+              onClick={() => {
+                const el = document.querySelector("#how-works");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              }}
               className="py-5 px-6 sm:px-10 w-full sm:w-auto bg-[#f5f8fb] rounded-xl sm:rounded-2xl border-primary text-primary font-semibold"
             >
               How it Works
@@ -83,52 +87,13 @@ export default function HeroSection() {
       {/* CARD SECTION */}
       <div className="flex justify-center px-3 sm:px-4 pb-16 md:pb-24">
         <Card className="w-full max-w-2xl shadow-xl backdrop-blur-xl">
-          <div className="p-4 sm:p-6">
-            {/* Tabs (scrollable on mobile) */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab.toLowerCase())}
-                    className={`whitespace-nowrap px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-all border rounded-lg sm:rounded-xl ${
-                      activeTab === tab.toLowerCase()
-                        ? "border-[#b9b9b9] bg-[#1c3565] text-white"
-                        : "border text-slate-500 hover:text-slate-700"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              <button className="text-slate-400 hover:text-slate-600 ml-2">
-                <X />
-              </button>
-            </div>
-
-            {/* Input */}
-            <label className="block text-sm font-semibold text-slate-700 mb-3">
-              Describe the vehicle problem
-            </label>
-
-            <div className="bg-slate-50 rounded-lg p-3 sm:p-4 mb-4 border border-slate-200">
-              <textarea
-                placeholder="Ask anything..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="w-full bg-transparent outline-none text-slate-700 placeholder-slate-400 text-sm resize-none"
-                rows={3}
-              />
-            </div>
-
-            {/* Actions */}
-            <div className="flex items-center justify-end">
-              <button className="bg-slate-900 hover:bg-slate-800 text-white p-2 rounded-lg transition-colors">
-                <Send size={18} />
-              </button>
-            </div>
-          </div>
+          <Image
+            src="/images/chat.jpg"
+            alt="hero"
+            width={1000}
+            height={1000}
+            className="w-full"
+          />
         </Card>
       </div>
     </main>
