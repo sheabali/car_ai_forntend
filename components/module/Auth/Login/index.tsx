@@ -113,13 +113,15 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
               <div className="text-primary text-5xl">
-                <Image
-                  src="/r_logo.png"
-                  alt="SmartAuto Logo"
-                  width={180}
-                  height={180}
-                  className="h-48 w-48"
-                />
+                <Link href="/">
+                  <Image
+                    src="/r_logo.png"
+                    alt="SmartAuto Logo"
+                    width={180}
+                    height={180}
+                    className="h-48 w-48"
+                  />
+                </Link>
               </div>
             </div>
 
