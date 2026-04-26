@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 interface MetricCardProps {
@@ -9,6 +10,7 @@ interface MetricCardProps {
   plan?: string;
   nextRenewal?: string;
   icon: React.ReactNode;
+  allplan?: any;
 }
 
 export default function MetricCard({
@@ -19,6 +21,7 @@ export default function MetricCard({
   month,
   invitations,
   plan,
+  allplan,
   nextRenewal,
 }: MetricCardProps) {
   console.log("invitations");
@@ -31,7 +34,31 @@ export default function MetricCard({
 
         <div className="flex items-center gap-4 mt-10">
           <h3 className="text-3xl font-bold text-gray-900">{value}</h3>
+          {/* Plan badges */}
+          {allplan && (
+            <div className="flex flex-wrap gap-2 mt-1">
+              <div className="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
+                <span className="text-xs text-gray-500">Professional</span>
+                <span className="text-[#00C566] font-semibold text-sm">
+                  {allplan.professional ?? 0}
+                </span>
+              </div>
 
+              <div className="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
+                <span className="text-xs text-gray-500">European</span>
+                <span className="text-[#00C566] font-semibold text-sm">
+                  {allplan.european ?? 0}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
+                <span className="text-xs text-gray-500">Basic</span>
+                <span className="text-[#00C566] font-semibold text-sm">
+                  {allplan.basic ?? 0}
+                </span>
+              </div>
+            </div>
+          )}
           {month && (
             <div className="text-sm font-medium rounded-full bg-[#e6f9f0] text-[#00C566] py-1 px-2">
               {month}

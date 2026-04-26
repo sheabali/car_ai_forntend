@@ -25,6 +25,7 @@ import {
   User,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -130,13 +131,15 @@ const DiagnosticChatHome = ({ onSessionStart }: DiagnosticChatHomeProps) => {
         {/* Sidebar Top */}
         <div className="p-4 space-y-4">
           <div className="flex items-center justify-start gap-2">
-            <Image
-              src="/r_logo.png"
-              alt="SmartAutoTech Logo"
-              width={200}
-              height={200}
-              className="h-16 w-16"
-            />
+            <Link href="/">
+              <Image
+                src="/r_logo.png"
+                alt="SmartAutoTech Logo"
+                width={200}
+                height={200}
+                className="h-16 w-16"
+              />
+            </Link>
             <h2 className="font-bold text-[#111827] text-[18px]">
               SmartAutoTech
             </h2>

@@ -6,6 +6,7 @@ import { Sparkles, UserMinus, Users } from "lucide-react";
 import ActiveUsersChart from "./ActiveUsersChart";
 import PerformanceTable from "./PerformanceTable";
 import RecentBillingTable from "./RecentBillingTable";
+import ShopOwnerDashboardSkeleton from "./ShopOwnerDashboardSkeleton";
 import TechnicianPerformance from "./technicianPerformance";
 
 const ShopOwnerDashboardOverview = () => {
@@ -75,13 +76,7 @@ const ShopOwnerDashboardOverview = () => {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center text-slate-400">
-        Loading dashboard...
-      </div>
-    );
-  }
+  if (isLoading) return <ShopOwnerDashboardSkeleton />;
 
   return (
     <div>

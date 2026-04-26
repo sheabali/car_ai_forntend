@@ -144,7 +144,7 @@ export default function Navbar() {
                   alt="Logo"
                   width={140}
                   height={140}
-                  className="object-contain w-24 h-24 md:w-36 h-36 rounded-2xl"
+                  className="object-contain w-24 md:w-36 h-36 rounded-2xl"
                 />
               </Link>
             </div>

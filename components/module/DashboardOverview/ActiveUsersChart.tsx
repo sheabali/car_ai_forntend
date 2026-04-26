@@ -64,7 +64,7 @@ export default function ActiveUsersChart({
 
   return (
     <Card className="w-full border-0 bg-white">
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
+      <CardHeader className="flex flex-row items-center justify-between pb-6">
         <CardTitle className="text-md font-semibold text-slate-900">
           Active Users
         </CardTitle>

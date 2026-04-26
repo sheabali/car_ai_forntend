@@ -12,7 +12,6 @@ import {
   YAxis,
 } from "recharts";
 
-// Decorative chart — no real monthly breakdown in API, kept as visual
 const chartData = [
   { month: "Jan", value: 4200, value2: 3800 },
   { month: "Feb", value: 3800, value2: 4200 },
@@ -35,7 +34,7 @@ export default function AiSessionsCard({
   const [period, setPeriod] = useState("Monthly");
 
   return (
-    <div className="w-full bg-white rounded-xl p-8 shadow-sm">
+    <div className="w-full bg-white rounded-xl px-8 pt-6 pb-20 shadow-sm">
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-semibold text-gray-900">AI Sessions</h2>
         <Button
