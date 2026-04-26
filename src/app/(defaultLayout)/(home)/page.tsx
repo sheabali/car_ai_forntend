@@ -6,11 +6,17 @@ import PricingPage from "@/components/module/Home/Pricing";
 
 const page = () => {
   return (
-    <div className="flex flex-col gap-4 md:mt-13">
+    <div className="flex flex-col gap-4 ">
       <HeroSection />
-      <FeaturesSection />
-      <HowWorks />
-      <PricingPage />
+      <section id="features">
+        <FeaturesSection />
+      </section>
+      <section id="how-works">
+        <HowWorks />
+      </section>
+      <section id="pricing">
+        <PricingPage />
+      </section>
       <FAQ />
     </div>
   );

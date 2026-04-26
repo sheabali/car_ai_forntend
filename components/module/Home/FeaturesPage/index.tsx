@@ -5,7 +5,7 @@ import TroubleshootingCard from "./TroubleshootingCard";
 
 export default function FeaturesSection() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-background mt-24">
       <section className="pt-16 sm:pt-20 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4 sm:mb-6">
@@ -16,7 +16,7 @@ export default function FeaturesSection() {
             <div className="w-6 sm:w-8 h-px bg-red-500"></div>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 sm:mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-bold text-foreground mb-4 sm:mb-6 leading-tight">
             Everything You Need to Diagnose Smarter
           </h1>
 

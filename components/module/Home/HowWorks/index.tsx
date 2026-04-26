@@ -34,16 +34,18 @@ const HowWorks = () => {
   ];
 
   return (
-    <main className="min-h-screen bg-[#f9f9f9] py-12 sm:py-16 px-4">
+    <main className="min-h-screen bg-[#f9f9f9] py-12 sm:py-16 mt-28 px-4">
       <div className="container mx-auto">
         {/* HEADER */}
         <div className="mb-12 sm:mb-16 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
-            <div className="h-px w-6 sm:w-8 bg-red-600" />
-            <span className="text-sm font-medium text-foreground">
-              How it works
-            </span>
-            <div className="h-px w-6 sm:w-8 bg-red-600" />
+            <div className="flex items-center justify-center gap-2 mb-4 sm:mb-6">
+              <div className="w-6 sm:w-8 h-px bg-red-500"></div>
+              <span className="text-xs sm:text-sm font-medium text-red-500">
+                How it works
+              </span>
+              <div className="w-6 sm:w-8 h-px bg-red-500"></div>
+            </div>
           </div>
 
           <h1 className="mb-4 sm:mb-6 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground">

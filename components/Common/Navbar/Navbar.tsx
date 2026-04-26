@@ -28,9 +28,9 @@ export default function Navbar() {
 
   const navItems = [
     { label: "Home", href: "/" },
-    { label: "Features", href: "/features" },
-    { label: "Pricing", href: "/pricing" },
-    { label: "How it works", href: "/how-works" },
+    { label: "Features", href: "#features" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "How it works", href: "#how-works" },
   ];
 
   const handleLogout = () => {
@@ -47,9 +47,16 @@ export default function Navbar() {
   }, []);
 
   // Hash listener
+
   useEffect(() => {
+    if (window.location.hash) {
+      window.history.replaceState(null, "", window.location.pathname);
+      setActiveHash("");
+    } else {
+      setActiveHash("");
+    }
+
     const handleHashChange = () => setActiveHash(window.location.hash);
-    setActiveHash(window.location.hash);
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
@@ -83,16 +90,29 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const isActive = (href: string) =>
-    href.startsWith("#") ? activeHash === href : pathname === href;
-
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/" && activeHash === "";
+    }
+    if (href.startsWith("#")) {
+      return activeHash === href;
+    }
+    return pathname === href;
+  };
   const handleNavigation = (path: string) => {
     if (path.startsWith("#")) {
-      const el = document.querySelector(path);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-      window.location.hash = path;
+      if (pathname !== "/") {
+        router.push("/" + path);
+      } else {
+        const el = document.querySelector(path);
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+        window.location.hash = path;
+      }
     } else {
       router.push(path);
+      // Home বা অন্য page এ গেলে hash clear করো
+      setActiveHash("");
+      window.location.hash = ""; // ← এটা যোগ করুন
     }
     setSidebarOpen(false);
   };

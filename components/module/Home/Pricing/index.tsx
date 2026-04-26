@@ -116,12 +116,16 @@ export default function PricingPage() {
   if (isLoading) return <PlanSelectionSkeleton />;
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white mt-24">
       <div className="pt-12 sm:pt-16 pb-10 sm:pb-12 text-center mb-10 sm:mb-16 px-4">
-        <div className="mb-3 sm:mb-4 inline-block">
-          <span className="text-xs sm:text-sm font-medium text-red-500 tracking-wide">
-            Pricing
-          </span>
+        <div className="mb-4 flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-2 mb-4 sm:mb-6">
+            <div className="w-6 sm:w-8 h-px bg-red-500"></div>
+            <span className="text-xs sm:text-sm font-medium text-red-500">
+              Pricing
+            </span>
+            <div className="w-6 sm:w-8 h-px bg-red-500"></div>
+          </div>
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl text-primary font-bold mb-4 leading-tight text-balance">
