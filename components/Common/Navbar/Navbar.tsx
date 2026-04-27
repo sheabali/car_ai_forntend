@@ -110,18 +110,18 @@ export default function Navbar() {
       }
     } else {
       router.push(path);
-      // Home বা অন্য page এ গেলে hash clear করো
+
       setActiveHash("");
-      window.location.hash = ""; // ← এটা যোগ করুন
+      window.location.hash = "";
     }
     setSidebarOpen(false);
   };
 
   const profileLink =
-    currentUser?.role === "PLAYER"
-      ? "/player-profile"
-      : currentUser?.role === "TEAM_MANAGER"
-        ? "/team-profile"
+    currentUser?.role === "TECHNICIAN"
+      ? "/chat"
+      : currentUser?.role === "USER"
+        ? "/shop-owner/dashboard"
         : currentUser?.role === "ADMIN"
           ? "/admin/dashboard"
           : "";

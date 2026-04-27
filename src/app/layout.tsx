@@ -11,8 +11,8 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Starter kit",
-  description: "starter kit for nextjs with redux and redux persist",
+  title: "SMARTAUTOTECH",
+  description: "AI-powered automotive diagnostic assistant",
 };
 
 export default function RootLayout({
