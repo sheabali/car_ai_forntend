@@ -10,6 +10,7 @@ import {
 } from "@/redux/api/shopOwnerDashboardApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -24,6 +25,8 @@ const technicianSchema = z.object({
 type TechnicianFormData = z.infer<typeof technicianSchema>;
 
 export default function AddTechnicianPage() {
+  const router = useRouter();
+
   const { data: limitInfoData } = useGetTechniciansLimitInfoQuery({});
   const [makeInvitation, { isLoading }] = useAddTechnicianMutation();
 
@@ -50,8 +53,9 @@ export default function AddTechnicianPage() {
 
     try {
       const res = await makeInvitation(payload).unwrap();
-
       toast.success(res.message || "Invitation sent successfully!");
+
+      router.push("/shop-owner/dashboard/technician-management");
     } catch (error: any) {
       console.error("Failed to send invitation:", error);
 

@@ -1,58 +1,62 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useUpdateTechnicianStatusMutation } from "@/redux/api/shopOwnerDashboardApi";
-import { Ban, CheckCircle, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-const ActionCell = ({ id, status }: { id: string; status: any }) => {
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Spinner } from "@/components/ui/spinner";
+
+const ActionCell = ({ id }: any) => {
   const [updateStatus, { isLoading }] = useUpdateTechnicianStatusMutation();
 
-  const handleStatusChange = async (newStatus: any) => {
+  const handleStatusChange = async () => {
     try {
-      await updateStatus({ id, status: newStatus }).unwrap();
-      toast.success("Status updated successfully");
+      await updateStatus({ id, status: "BLOCKED" }).unwrap();
+      toast.success("Technician deleted successfully");
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to update status.");
+      toast.error(err?.data?.message || "Failed to delete technician.");
       console.error("Failed to update status:", err);
     }
   };
 
-  if (status === "ACTIVE") {
-    return (
-      <button
-        disabled={isLoading}
-        onClick={() => handleStatusChange("SUSPENDED")}
-        className="text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
-      >
-        <Trash2 size={18} />
-      </button>
-    );
-  }
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <button
+          disabled={isLoading}
+          className="text-red-500 hover:text-red-600 transition-colors disabled:opacity-50"
+        >
+          {isLoading ? <Spinner /> : <Trash2 className="w-5 h-5" />}
+        </button>
+      </AlertDialogTrigger>
 
-  if (status === "INVITED") {
-    return (
-      <button
-        disabled={isLoading}
-        onClick={() => handleStatusChange("BLOCKED")}
-        className="text-yellow-500 hover:text-yellow-600 transition-colors disabled:opacity-50"
-      >
-        <Ban size={18} />
-      </button>
-    );
-  }
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action will delete the technician. You can’t undo this change.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
-  if (status === "SUSPENDED") {
-    return (
-      <button
-        disabled={isLoading}
-        onClick={() => handleStatusChange("ACTIVE")}
-        className="text-green-500 hover:text-green-600 transition-colors disabled:opacity-50"
-      >
-        <CheckCircle size={18} />
-      </button>
-    );
-  }
-
-  return null;
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleStatusChange} disabled={isLoading}>
+            Yes, Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
 };
 
 export default ActionCell;

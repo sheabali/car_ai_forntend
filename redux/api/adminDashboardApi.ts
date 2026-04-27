@@ -4,9 +4,10 @@ import { baseApi } from "./baseApi";
 export const adminDashboardApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getDashboardOverview: builder.query({
-      query: () => ({
+      query: ({ timeRange }) => ({
         url: "/admin/dashboard",
         method: "GET",
+        params: { timeRange },
       }),
       providesTags: ["ShopOwner"],
     }),

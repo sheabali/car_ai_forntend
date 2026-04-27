@@ -1,13 +1,7 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState } from "react";
 import {
   Bar,
@@ -42,11 +36,11 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   return null;
 };
 
-const timeRanges = [
-  { label: "This Week", value: "week" },
-  { label: "This Month", value: "month" },
-  { label: "This Year", value: "year" },
-];
+// const timeRanges = [
+//   { label: "This Week", value: "week" },
+//   { label: "This Month", value: "month" },
+//   { label: "This Year", value: "year" },
+// ];
 
 export default function ActiveUsersChart({
   chartData,
@@ -68,7 +62,10 @@ export default function ActiveUsersChart({
         <CardTitle className="text-md font-semibold text-slate-900">
           Active Users
         </CardTitle>
-        <Select value={timeRange} onValueChange={setTimeRange}>
+
+        <Button variant="outline">This Week</Button>
+
+        {/* <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-32">
             <SelectValue />
           </SelectTrigger>
@@ -79,7 +76,7 @@ export default function ActiveUsersChart({
               </SelectItem>
             ))}
           </SelectContent>
-        </Select>
+        </Select> */}
       </CardHeader>
       <CardContent className="pt-0">
         <ResponsiveContainer width="100%" height={350}>

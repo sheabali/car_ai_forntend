@@ -2,6 +2,7 @@
 import MetricCard from "@/components/shared/MetricCardDashboard";
 import { useGetDashboardOverviewQuery } from "@/redux/api/adminDashboardApi";
 import { CreditCard, MessagesSquare, Store, Users } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import ActiveUsersChart from "./ActiveUsersChart";
 import AiSessionsCard from "./AiSessionsCard";
 import DashboardOverviewSkeleton from "./DashboardOverviewSkeleton";
@@ -9,7 +10,12 @@ import RecentBillingTable from "./RecentBillingTable";
 import CustomersTable from "./UserTable";
 
 const DashboardOverview = () => {
-  const { data: dashboardData, isLoading } = useGetDashboardOverviewQuery({});
+  const searchParams = useSearchParams();
+  const timeRange = searchParams.get("timeRange") || "month";
+
+  const { data: dashboardData, isLoading } = useGetDashboardOverviewQuery({
+    timeRange,
+  });
   const dashboard = dashboardData?.data || {};
 
   const topStats = dashboard?.topStats;

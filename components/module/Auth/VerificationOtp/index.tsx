@@ -2,13 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useResendOtpMutation } from "@/redux/api/authApi";
 import { useVerifyEmailOtpMutation } from "@/redux/api/planPaymentApi";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -245,11 +243,11 @@ export default function VerificationOtpPage() {
                   {isVerifyingOtp ? "Loading..." : "Verify OTP"}
                 </button>
 
-                <Link href="/forgot-password" className="w-full">
+                {/* <Link href="/forgot-password" className="w-full">
                   <Button variant="outline" className="w-full py-6">
                     Cancel
                   </Button>
-                </Link>
+                </Link> */}
               </div>
             </form>
           </div>
