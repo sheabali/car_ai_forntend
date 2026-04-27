@@ -115,15 +115,13 @@ export default function AppHeader({
       <div className="mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <div className="flex items-center gap-2 px-4 py-2 rounded-md">
-          <Link href="/">
-            <Image
-              src="/r_logo.png"
-              alt="Logo"
-              width={80}
-              height={80}
-              className="size-auto"
-            />
-          </Link>
+          <Image
+            src="/r_logo.png"
+            alt="Logo"
+            width={80}
+            height={80}
+            className="size-auto"
+          />
         </div>
 
         {/* Desktop Nav */}

@@ -340,7 +340,7 @@ const DiagnosticChatHome = ({ onSessionStart }: DiagnosticChatHomeProps) => {
                       e.preventDefault();
                     }
                   }}
-                  placeholder="Describe vehicle issues, symptoms, or error codes..."
+                  placeholder="Enter vehicle make, model, year, and describe issues, symptoms, or error codes..."
                   className="pl-12 pr-24 py-6 bg-gray-50 text-black border-blue-100 rounded-2xl focus-visible:ring-blue-400"
                 />
                 <div className="absolute right-2 flex items-center gap-1">

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
   useGetChatMessagesQuery,
@@ -412,12 +413,16 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
                 accept="image/*"
               />
               <div className="flex-1 relative flex items-center">
-                <Input
+                <Textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Describe vehicle issues, symptoms, or error codes..."
-                  className="pr-24 py-6 bg-gray-50 text-black border-blue-100 rounded-2xl focus-visible:ring-blue-400"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                    }
+                  }}
+                  placeholder="Enter vehicle make, model, year, and describe issues, symptoms, or error codes..."
+                  className="pl-12 pr-24 py-6 bg-gray-50 text-black border-blue-100 rounded-2xl focus-visible:ring-blue-400"
                 />
                 <div className="absolute right-2 flex items-center gap-1">
                   <Button

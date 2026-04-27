@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { StepIndicator } from "./onboarding-step-indicator";
 
 interface OnboardingLayoutProps {
@@ -16,15 +15,13 @@ export function OnboardingLayout({
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <Link href="/">
-            <Image
-              src="/r_logo.png"
-              alt="SmartAuto"
-              width={100}
-              height={100}
-              className="object-contain"
-            />
-          </Link>
+          <Image
+            src="/r_logo.png"
+            alt="SmartAuto"
+            width={100}
+            height={100}
+            className="object-contain"
+          />
         </div>
 
         {/* Title */}

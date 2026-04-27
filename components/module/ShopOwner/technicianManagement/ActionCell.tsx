@@ -52,7 +52,6 @@ const ActionCell = ({ id, status }: { id: string; status: any }) => {
     );
   }
 
-  // BLOCKED / INACTIVE — no action
   return null;
 };
 

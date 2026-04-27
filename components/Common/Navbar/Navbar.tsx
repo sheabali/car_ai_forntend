@@ -138,15 +138,13 @@ export default function Navbar() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-[120px]">
             <div className="shrink-0 transition-transform duration-200 hover:scale-105">
-              <Link href="/">
-                <Image
-                  src="/r_logo.png"
-                  alt="Logo"
-                  width={140}
-                  height={140}
-                  className="object-contain w-24 md:w-36 h-36 rounded-2xl"
-                />
-              </Link>
+              <Image
+                src="/r_logo.png"
+                alt="Logo"
+                width={140}
+                height={140}
+                className="object-contain w-24 md:w-36 h-36 rounded-2xl"
+              />
             </div>
 
             <div className="hidden lg:flex items-center gap-1">
