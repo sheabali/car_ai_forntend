@@ -118,7 +118,7 @@ export function PlanCard({
             plan.hasTrial ? "text-blue-200" : "text-gray-500"
           }`}
         >
-          Up to {plan.technicianLimit} technician
+          {plan.technicianLimit} technician
           {plan.technicianLimit !== 1 ? "s" : ""}
         </p>
       </div>

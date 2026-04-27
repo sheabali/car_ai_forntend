@@ -63,7 +63,7 @@ const MaintenanceTable = () => {
         header: "Technicians",
         cell: ({ row }) => (
           <p className="text-sm text-gray-700">
-            Up to {row.original.technicianLimit}
+            {row.original.technicianLimit}
           </p>
         ),
       },

@@ -192,7 +192,7 @@ export default function PlanSelection() {
               </Button>
 
               <p className="text-md font-semibold opacity-70 mb-3">
-                Up to {plan.technicianLimit} technician
+                {plan.technicianLimit} technician
                 {plan.technicianLimit > 1 && "s"}
               </p>
 

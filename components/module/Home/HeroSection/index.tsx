@@ -23,6 +23,7 @@ export default function HeroSection() {
   const { data: getUser } = useGetMeQuery({}) as any;
   const user = getUser?.data;
   const isSubscribed = user?.isSubscribed;
+  const role = user?.role;
 
   console.log("user", user);
 

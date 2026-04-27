@@ -16,10 +16,13 @@ import {
   useUploadImagesMutation,
 } from "@/redux/api/aiApi";
 import { useGetMeQuery } from "@/redux/api/authApi";
+import { logout } from "@/redux/features/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronLeft,
-  Image as ImageIcon,
+  Edit,
+  ImageIcon,
   Loader2,
   LogOut,
   Plus,
@@ -28,18 +31,15 @@ import {
   User,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
-interface DiagnosticChatSessionProps {
-  onLogout?: () => void;
-}
-
-const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
+const DiagnosticChatSession = () => {
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   const chatId = useParams().chatId as string;
   const sessionId = chatId;
 
@@ -121,11 +121,9 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
   };
 
   const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
-    } else {
-      router.push("/");
-    }
+    dispatch(logout());
+    window.location.reload();
+    // router.push("/");
   };
 
   return (
@@ -203,49 +201,61 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
         </div>
 
         {/* Sidebar Footer — User Profile */}
-        <div className="p-4 border-t border-blue-100 bg-white/60">
+        <div className="p-4 border-t border-gray-200 bg-white">
           <div className="flex items-center gap-3">
             {/* Avatar */}
-            {user?.profileImage ? (
-              <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-blue-200 shrink-0">
+            <div className="relative w-10 h-10 rounded-full overflow-hidden border border-gray-200 shrink-0">
+              {user?.profileImage ? (
                 <Image
                   src={user.profileImage}
                   alt={displayName}
                   fill
                   className="object-cover"
                 />
-              </div>
-            ) : (
-              <div className="w-9 h-9 rounded-full bg-[#042055] text-white flex items-center justify-center text-sm font-semibold shrink-0">
-                {initials || <User className="w-4 h-4" />}
-              </div>
-            )}
+              ) : (
+                <div className="w-full h-full bg-[#042055] text-white flex items-center justify-center text-sm font-semibold">
+                  {initials || <User className="w-4 h-4" />}
+                </div>
+              )}
+            </div>
 
-            {/* Name & Email */}
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-[#111827] truncate">
+            {/* User Info */}
+            <div className="flex-1 min-w-0 leading-tight">
+              <p className="text-sm font-semibold text-gray-900 truncate">
                 {displayName}
               </p>
 
               {displayEmail && (
-                <p className="text-[11px] text-[#6B7280] truncate">
-                  {displayEmail}
-                </p>
+                <p className="text-xs text-gray-500 truncate">{displayEmail}</p>
               )}
-              <div className="text-xs font-semibold text-gray-800 mb-2">
-                {user?.plan?.name || "No Plan Found"}
-              </div>
+
+              <p className="text-[11px] font-medium text-blue-600 mt-1">
+                {user?.plan?.name || "No Plan"}
+              </p>
             </div>
 
-            {/* Logout Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLogout}
-              className="shrink-0 text-[#6B7280] hover:text-red-500 hover:bg-red-50 rounded-lg"
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
+            {/* Actions */}
+            <div className="flex items-center gap-1">
+              <Link href="/chat/profile">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  title="Profile"
+                  className="text-gray-500 hover:text-gray-600 hover:bg-blue-50 rounded-md"
+                >
+                  <Edit className="w-4 h-4" />
+                </Button>
+              </Link>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleLogout}
+                className="text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-md"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -269,7 +279,7 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
               />
             </Button>
             <div>
-              <h3 className="font-semibold text-blue-900">
+              <h3 className="font-semibold text-[#042055]">
                 {activeSession?.title || "Diagnostic Session"}
               </h3>
             </div>
@@ -424,18 +434,20 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
                   placeholder="Enter vehicle make, model, year, and describe issues, symptoms, or error codes..."
                   className="pl-12 pr-24 py-6 bg-gray-50 text-black border-blue-100 rounded-2xl focus-visible:ring-blue-400"
                 />
-                <div className="absolute right-2 flex items-center gap-1">
+                <div className="absolute left-2 flex items-center gap-1">
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="icon"
                     onClick={() => fileInputRef.current?.click()}
                     className={cn(
-                      "text-blue-400 hover:text-blue-600 h-8 w-8",
-                      selectedFile && "text-blue-600 bg-blue-50",
+                      "text-[#042055] hover:text-primary h-8 w-8",
+                      selectedFile && "text-primary bg-blue-50",
                     )}
                   >
                     <ImageIcon className="w-5 h-5" />
                   </Button>
+                </div>
+                <div className="absolute right-2 flex items-center pe-5 gap-1">
                   <Button
                     onClick={handleSendMessage}
                     disabled={
@@ -452,6 +464,7 @@ const DiagnosticChatSession = ({ onLogout }: DiagnosticChatSessionProps) => {
                     )}
                   </Button>
                 </div>
+                a
               </div>
             </div>
           </div>
