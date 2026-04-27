@@ -1,13 +1,6 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState } from "react";
 import {
   Bar,
@@ -20,11 +13,11 @@ import {
   YAxis,
 } from "recharts";
 
-const timeRanges = [
-  { label: "This Week", value: "week" },
-  // { label: "This Month", value: "month" },
-  // { label: "This Year", value: "year" },
-];
+// const timeRanges = [
+//   { label: "This Week", value: "week" },
+//   { label: "This Month", value: "month" },
+//   { label: "This Year", value: "year" },
+// ];
 
 interface DiagnosticsActivity {
   day: string;
@@ -79,7 +72,7 @@ export default function ActiveUsersChart({
         <CardTitle className="text-md font-semibold text-slate-900">
           Diagnostic Sessions
         </CardTitle>
-        <Select value={timeRange} onValueChange={setTimeRange}>
+        {/* <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-32">
             <SelectValue />
           </SelectTrigger>
@@ -90,7 +83,7 @@ export default function ActiveUsersChart({
               </SelectItem>
             ))}
           </SelectContent>
-        </Select>
+        </Select> */}
       </CardHeader>
       <CardContent className="pt-0">
         {maxSessions === 0 ? (

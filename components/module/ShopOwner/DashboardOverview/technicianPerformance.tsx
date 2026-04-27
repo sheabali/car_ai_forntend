@@ -1,12 +1,5 @@
 "use client";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 const COLORS = [
@@ -48,7 +41,7 @@ export default function TechnicianPerformance({
           <h1 className="text-[16px] font-semibold text-[#4F5655]">
             Technician Performance
           </h1>
-          <Select defaultValue="month">
+          {/* <Select defaultValue="month">
             <SelectTrigger className="w-40">
               <SelectValue placeholder="Select period" />
             </SelectTrigger>
@@ -58,7 +51,7 @@ export default function TechnicianPerformance({
               <SelectItem value="quarter">This quarter</SelectItem>
               <SelectItem value="year">This year</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
         </div>
 
         {/* Chart Card */}
