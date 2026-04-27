@@ -155,6 +155,7 @@ export default function AppHeader({
                   <AvatarImage
                     src={safeUser.profileImage}
                     alt={safeUser.name}
+                    className="object-cover"
                   />
                   <AvatarFallback className="bg-slate-300 text-slate-700 text-xs font-semibold">
                     {initials}

@@ -6,10 +6,10 @@ import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useGetMeQuery } from "@/redux/api/authApi";
-import { useUpdateProfileMutation } from "@/redux/api/shopOwnerDashboardApi";
+import { useGetMeQuery, useUpdateUserMutation } from "@/redux/api/authApi";
 import { User } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -24,7 +24,9 @@ interface FormValues {
 }
 
 export default function ShopOwnerProfileCard() {
-  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
+  const router = useRouter();
+
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateUserMutation();
   const { data: getMeData, isLoading } = useGetMeQuery({}) as any;
   const me = getMeData?.data;
 
@@ -60,6 +62,8 @@ export default function ShopOwnerProfileCard() {
 
       await updateProfile(formData).unwrap();
       toast.success("Profile updated successfully!");
+
+      router.push("/admin/profile");
     } catch (error: any) {
       console.error("Update failed:", error);
       toast.error(error?.data?.message || "Failed to update profile.");

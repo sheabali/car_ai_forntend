@@ -3,14 +3,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useGetMeQuery } from "@/redux/api/authApi";
+import { useGetProfileQuery } from "@/redux/api/authApi";
 import { SquarePen, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ShopOwnerCardSkeleton from "../ShopOwner/Profile/ShopOwnerCardSkeleton";
 
 const ShopOwnerCard = () => {
-  const { data: getMeData, isLoading } = useGetMeQuery({}) as any;
+  const { data: getMeData, isLoading } = useGetProfileQuery({}) as any;
 
   const me = getMeData?.data;
 
@@ -29,8 +29,8 @@ const ShopOwnerCard = () => {
           <Image
             src={profileImage}
             alt="user"
-            width={120}
-            height={120}
+            width={500}
+            height={500}
             className="rounded-full w-32 h-32 object-cover"
           />
         ) : (
