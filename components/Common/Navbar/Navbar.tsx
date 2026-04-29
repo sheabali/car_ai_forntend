@@ -143,7 +143,7 @@ export default function Navbar() {
                 alt="Logo"
                 width={140}
                 height={140}
-                className="object-contain w-24 md:w-36 h-36 rounded-2xl"
+                className="object-contain w-24 md:w-28 h-28 rounded-2xl"
               />
             </div>
 
@@ -210,7 +210,13 @@ export default function Navbar() {
                           className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition rounded-t-none"
                           onClick={() => setProfileOpen(false)}
                         >
-                          Profile Settings
+                          {currentUser?.role === "TECHNICIAN"
+                            ? "Go to Technician Chat"
+                            : currentUser?.role === "USER"
+                              ? "Go to Shop Dashboard"
+                              : currentUser?.role === "ADMIN"
+                                ? "Go to Admin Dashboard"
+                                : ""}
                         </Link>
                       </li>
                       <li>
@@ -349,7 +355,13 @@ export default function Navbar() {
                 onClick={() => setSidebarOpen(false)}
                 className="block w-full text-center py-2 rounded-2xl bg-white border border-[#042055] text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
               >
-                Profile Settings
+                {currentUser?.role === "TECHNICIAN"
+                  ? "Go to Technician Chat"
+                  : currentUser?.role === "USER"
+                    ? "Go to Shop Dashboard"
+                    : currentUser?.role === "ADMIN"
+                      ? "Go to Admin Dashboard"
+                      : ""}
               </Link>
               <button
                 onClick={handleLogout}

@@ -1,17 +1,16 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import PHInput from "@/components/form/NRInput";
 import Loading from "@/components/shared/Loading";
 import { Button } from "@/components/ui/button";
-import animationData from "@/public/lottie/Service.json";
 import { useLoginMutation } from "@/redux/api/authApi";
 import { setUser } from "@/redux/features/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { setCookie } from "@/src/utils/cookies";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import Lottie from "lottie-react";
 import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -82,7 +81,7 @@ export default function LoginPage() {
       {/* Left Sidebar */}
       <div className="w-1/2 relative flex flex-col justify-center border-r border-slate-200 overflow-hidden">
         {/* Background Image with subtle overlay */}
-        <div className="absolute inset-0 bg-[url('/Lo.png')] bg-cover bg-center"></div>
+        {/* <div className="absolute inset-0 bg-[url('/Lo.png')] bg-cover bg-center"></div> */}
         {/* <div className="absolute inset-0 bg-black/25"></div> */}
 
         {/* Content */}
@@ -98,11 +97,18 @@ export default function LoginPage() {
 
           {/* Lottie Animation */}
           <div className="w-full h-full">
-            <Lottie
+            {/* <Lottie
               animationData={animationData}
               loop
               autoplay
               className="w-full h-full"
+            /> */}
+            <img
+              src="/video/video.gif"
+              alt="animation"
+              width={500}
+              height={500}
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
