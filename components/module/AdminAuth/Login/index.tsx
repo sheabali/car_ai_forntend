@@ -112,7 +112,7 @@ export default function LoginPage() {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-slate-900 mb-2">
-              WelCome Back !
+              Welcome Back !
             </h1>
             <p className="text-[#4B5563] text-[16px]">
               Don&apos;t have an account?{" "}

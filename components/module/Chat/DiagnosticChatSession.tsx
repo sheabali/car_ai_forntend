@@ -250,6 +250,7 @@ const DiagnosticChatSession = () => {
               <Button
                 variant="ghost"
                 size="icon"
+                title="Logout"
                 onClick={handleLogout}
                 className="text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-md"
               >

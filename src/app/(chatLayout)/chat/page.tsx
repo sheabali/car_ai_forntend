@@ -229,22 +229,26 @@ const DiagnosticChatHome = ({ onSessionStart }: DiagnosticChatHomeProps) => {
               </p>
             </div>
 
-            {/* Actions */}
             <div className="flex items-center gap-1">
+              {/* Profile Button */}
               <Link href="/chat/profile">
                 <Button
                   variant="ghost"
                   size="icon"
                   title="Profile"
+                  aria-label="Go to profile"
                   className="text-gray-500 hover:text-gray-600 hover:bg-blue-50 rounded-md"
                 >
                   <Edit className="w-4 h-4" />
                 </Button>
               </Link>
 
+              {/* Logout Button */}
               <Button
                 variant="ghost"
                 size="icon"
+                title="Logout"
+                aria-label="Logout"
                 onClick={handleLogout}
                 className="text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-md"
               >
